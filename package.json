@@ -12,12 +12,15 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.13.2",
     "@react-native-community/masked-view": "^0.1.10",
+    "@react-native-community/toolbar-android": "^0.1.0-rc.2",
     "@react-navigation/native": "^5.8.8",
     "axios": "^0.21.0",
     "formik": "^2.2.3",
+    "native-base": "^2.13.14",
     "qs": "^6.9.4",
     "react": "16.13.1",
     "react-native": "0.63.3",
+    "react-native-btr": "^1.1.5",
     "react-native-dotenv": "^2.4.2",
     "react-native-gesture-handler": "^1.8.0",
     "react-native-reanimated": "^1.13.1",
@@ -28,7 +31,8 @@
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
-    "redux-promise-middleware": "^6.1.2"
+    "redux-promise-middleware": "^6.1.2",
+    "yup": "^0.29.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",

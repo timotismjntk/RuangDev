@@ -8,17 +8,20 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 // import {PersistGate} from 'redux-persist/integration/react';
 
 // Import Screens
+import Homepage from './src/screens/Home';
 import Login from './src/screens/Login';
-import Logo from './src/assets/blanja.png';
+import Forgot from './src/screens/Forgot';
+import SignUp from './src/screens/Signup';
+
 
 export default class App extends Component {
   render() {
     return (
       // <Provider store={store}>
       //   <PersistGate loading={null} persistor={persistor}>
-      <>
-        <Login />
-      </>
+      <SafeAreaProvider>
+        <Homepage />
+      </SafeAreaProvider>
       //   </PersistGate>
       // </Provider>
     );

@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {View, ScrollView, Image, Platform, KeyboardAvoidingView, Text, TextInput, StyleSheet, TouchableOpacity, Button} from 'react-native';
 import { Formik, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { CheckBox } from 'react-native-btr';
+import {DatePicker, Radio} from 'native-base';
 // import icon
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Smug from '../assets/smug.png';
@@ -14,10 +14,29 @@ const Login = () => {
   const [bottom, setBottom] = useState(1);
   const [bottom2, setBottom2] = useState(1);
   const [shadow2, setShadow2] = useState('#B5BDC4');
-  const [isSelected, setSelection] = useState(false);
+  const [bottom3, setBottom3] = useState(1);
+  const [shadow3, setShadow3] = useState('#B5BDC4');
+  const [gender, setGender] = useState('');
+  const [isMale, setIsMale] = useState(false);
+  const [isFemale, setIsFemale] = useState(false);
   let styleCustom = { borderColor: shadow, borderBottomWidth: bottom };
   let styleCustom2 = { borderColor: shadow2, borderBottomWidth: bottom2, marginBottom: 10 };
+  let styleCustom3 = { borderColor: shadow3, borderBottomWidth: bottom3, marginBottom: 10 };
   let emailInput = null;
+  let fullnameInput = null;
+  const [chosenDate, setDate] = useState(new Date());
+
+  const selectGenderMale = () => {
+    setIsMale(!isMale);
+    setIsFemale(false);
+    setGender('Male');
+  };
+  const selectGenderFemale = () => {
+    setIsFemale(!isFemale);
+    setIsMale(false);
+    setGender('Female');
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.parent}>
@@ -39,14 +58,18 @@ const Login = () => {
       <View style={styles.confirmationText}>
             <View style={styles.line}/>
             <View>
-                <Text style={styles.textlink}>Have a password? Continue with your
-                {'\n'}                      email address</Text>
+                <Text style={styles.textlink}>Already have an account?
+                {'\n'}<TouchableOpacity style={styles.signoptions}>
+                        <Text style={styles.textsignoptions}>View more sign in options</Text>
+                      </TouchableOpacity></Text>
             </View>
             <View style={styles.line}/>
       </View>
       <Formik
-          initialValues={{ email: '', password: '' }}
+          initialValues={{ fullname: '', email: '', password: '' }}
           validationSchema={Yup.object({
+            fullname: Yup.string()
+              .required('Required'),
             email: Yup.string()
               .email('Invalid Email')
               .required('Required'),
@@ -56,18 +79,70 @@ const Login = () => {
           onSubmit={(values, formikActions) => {
             setTimeout(() => {
               formikActions.setSubmitting(false);
+              console.log(gender);
             }, 500);
           }}>
           {props => (
             <KeyboardAvoidingView style={{width: '100%'}}>
+             <Text style={styles.fullname}>Fullname</Text>
+             <TextInput
+                onChangeText={props.handleChange('fullname')}
+                onBlur={()=>{props.handleBlur('fullname'); setShadow('#B5BDC4'); setBottom(1);}}
+                value={props.values.fullname}
+                onFocus={()=>{setShadow('#3B49DF'); setBottom(4);}}
+                placeholder="Fullname"
+                style={[styles.input, styleCustom]}
+                onSubmitEditing={() => {
+                  fullnameInput.focus();
+                }}
+              />
+              {props.touched.fullname && props.errors.fullname ? (
+                <Text style={styles.error}>{props.errors.fullname}</Text>
+              ) : null}
+              <Text style={{marginTop: 10}}>BirthDate</Text>
+              <View style={styles.inputDate}>
+                <DatePicker
+                    defaultDate={new Date(2020, 1, 1)}
+                    minimumDate={new Date(1800, 1, 1)}
+                    maximumDate={new Date(2100, 12, 31)}
+                    locale={"en"}
+                    timeZoneOffsetInMinutes={undefined}
+                    modalTransparent={false}
+                    animationType={"fade"}
+                    androidMode={"default"}
+                    placeHolderText="BirthDate"
+                    textStyle={{ color: "black" }}
+                    placeHolderTextStyle={{ fontSize: 15, color: "grey" }}
+                    onDateChange={setDate}
+                    disabled={false}
+                />
+              </View>
+              <Text style={styles.gender}>Gender</Text>
+              <View style={styles.radio}>
+                <Radio
+                    onPress={selectGenderMale}
+                    color={"#3B49DF"}
+                    selectedColor={"#3B49DF"}
+                    selected={isMale}
+                />
+                <Text style={{marginLeft: 10}}>Male</Text>
+                <Radio
+                    onPress={selectGenderFemale}
+                    color={"#3B49DF"}
+                    selectedColor={"#3B49DF"}
+                    selected={isFemale}
+                    style={{marginLeft: 30}}
+                />
+                <Text style={{marginLeft: 10}}>Female</Text>
+              </View>
              <Text style={styles.email}>Email</Text>
              <TextInput
                 onChangeText={props.handleChange('email')}
-                onBlur={()=>{props.handleBlur('email'); setShadow('#B5BDC4'); setBottom(1);}}
+                onBlur={()=>{props.handleBlur('email'); setShadow2('#B5BDC4'); setBottom2(1);}}
                 value={props.values.email}
-                onFocus={()=>{setShadow('#3B49DF'); setBottom(4);}}
+                onFocus={()=>{setShadow2('#3B49DF'); setBottom2(4);}}
                 placeholder="Email"
-                style={[styles.input, styleCustom]}
+                style={[styles.input, styleCustom2]}
                 onSubmitEditing={() => {
                   emailInput.focus();
                 }}
@@ -78,39 +153,28 @@ const Login = () => {
               <Text style={styles.password}>Password</Text>
               <TextInput
                 onChangeText={props.handleChange('password')}
-                onBlur={()=>{props.handleBlur('password'); setShadow2('#B5BDC4'); setBottom2(1);}}
+                onBlur={()=>{props.handleBlur('password'); setShadow3('#B5BDC4'); setBottom3(1);}}
                 value={props.values.password}
-                onFocus={()=>{setShadow2('#3B49DF'); setBottom2(4);}}
+                onFocus={()=>{setShadow3('#3B49DF'); setBottom3(4);}}
                 placeholder="Password"
-                style={[styles.input, styleCustom2]}
+                style={[styles.input, styleCustom3]}
                 ref={el => emailInput = el}
                 secureTextEntry={true}
               />
               {props.touched.password && props.errors.password ? (
                 <Text style={styles.error}>{props.errors.password}</Text>
               ) : null}
-              <View style={styles.checkbox}>
-                <CheckBox
-                  checked={isSelected}
-                  onPress={() => setSelection(!isSelected)}
-                  color="#3B49DF"
-                />
-                <Text style={styles.checkboxtext}>Remember Me</Text>
-              </View>
               <TouchableOpacity
                 onPress={props.handleSubmit}
                 mode="contained"
                 loading={props.isSubmitting}
                 disabled={props.isSubmitting}
                 style={styles.btnsubmit}>
-                    <Text style={styles.textsubmit}>Continue</Text>
+                    <Text style={styles.textsubmit}>Signup</Text>
               </TouchableOpacity>
             </KeyboardAvoidingView>
           )}
         </Formik>
-        <TouchableOpacity style={styles.forgotlink}>
-            <Text style={styles.textforgot}>I forgot my password</Text>
-        </TouchableOpacity>
         <Text>Open Source <Image source={Smug} style={styles.image} />. Free Forever <Icon name="heart" color="red" size={25} /></Text>
         <Text>we strive for transparency <Image source={Anonymous} style={styles.image} /> and don't collect
         {'\n'}                                 excess data.</Text>
@@ -245,17 +309,34 @@ const styles = StyleSheet.create({
         marginTop: 15,
         borderRadius: 10,
     },
-    checkbox: {
+    inputDate: {
+        width: '100%',
+        height: 50,
+        borderColor: '#B5BDC4',
+        borderWidth: 1,
+        borderTopColor: '#B5BDC4',
+        borderLeftColor: '#B5BDC4',
+        borderRightColor: '#B5BDC4',
+        borderBottomWidth: 1,
+        borderRadius: 10,
+        marginBottom: 10,
+        marginTop: 10,
+    },
+    birthdate: {
+        marginLeft: -10,
+    },
+    radio: {
       width: '100%',
       flexDirection: 'row',
       marginTop: 10,
+      marginBottom: 15,
     },
-    checkboxtext: {
-      marginLeft: 10,
-      fontSize: 15,
+    gender: {
+        // marginBottom: 10,
     },
     btnsubmit: {
         marginTop: 25,
+        marginBottom: 10,
         height: 50,
         borderRadius: 5,
         alignItems: 'center',
@@ -269,11 +350,11 @@ const styles = StyleSheet.create({
     error: {
         color: '#3B49DF',
     },
-    forgotlink: {
+    signoptions: {
         marginTop: 20,
         marginBottom: 20,
     },
-    textforgot: {
+    textsignoptions: {
         color: '#3B49DF',
     },
     image: {
