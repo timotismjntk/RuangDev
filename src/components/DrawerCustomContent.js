@@ -31,6 +31,14 @@ const DrawerCustomContent = (props) => {
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
         <DrawerItem
+          label="Write A Post"
+          labelStyle={{color: 'black'}}
+          icon={({size, color}) => (
+            <Icon name="newspaper" size={size} color="#3B49DF" />
+          )}
+          onPress={() => props.navigation.navigate('CreateNewsArticle')}
+        />
+        <DrawerItem
           label="Sign Out"
           icon={({size, color}) => (
             <Icon name="sign-out-alt" size={size} color="red" />
@@ -38,6 +46,9 @@ const DrawerCustomContent = (props) => {
           onPress={() => console.log('Log out')}
         />
       </DrawerContentScrollView>
+      <View style={styles.versions}>
+        <Text style={styles.versionsText}>Version 1.0</Text>
+      </View>
     </SafeAreaView>
   );
 };
@@ -58,5 +69,12 @@ const styles = StyleSheet.create({
   textLogo: {
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  versions: {
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  versionsText: {
+    color: 'grey',
   },
 });

@@ -18,6 +18,8 @@ import * as Yup from 'yup';
 import ImagePicker from 'react-native-image-picker';
 import {API_URL} from '@env';
 
+// import components
+import LoadingModal from '../components/LoadingModal';
 import Footer from '../components/FooterAfterLogin';
 
 const EditProfile = () => {
@@ -68,6 +70,7 @@ const EditProfile = () => {
 
   return (
     <ScrollView style={styles.container}>
+      <LoadingModal duration={450} />
       <View style={styles.wrapper}>
         <View style={styles.title}>
           <Text style={styles.text}>Settings for</Text>

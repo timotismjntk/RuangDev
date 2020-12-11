@@ -1,13 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
@@ -18,6 +10,7 @@ import SignUp from '../screens/Signup';
 
 // import stack
 import MainStack from '../screens/MainStack';
+import SettingStack from '../screens/SettingStack';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -63,7 +56,20 @@ const Root = () => {
             }}
             options={{
               drawerIcon: ({focused, color, size}) => (
-                <Icon name="home" size={size} color="green" />
+                <Icon name="home" size={size} color="#3B49DF" />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="Setting"
+            component={SettingStack}
+            initialRouteName="Setting"
+            drawerContentOptions={{
+              activeTintColor: '#e91e63',
+            }}
+            options={{
+              drawerIcon: ({focused, color, size}) => (
+                <Icon name="cog" size={size} color="#3B49DF" />
               ),
             }}
           />

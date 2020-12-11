@@ -6,6 +6,9 @@ import { Formik, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { CheckBox } from 'react-native-btr';
 
+// import components
+import LoadingModal from '../components/LoadingModal';
+
 // import icon
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Smug from '../assets/smug.png';
@@ -27,20 +30,19 @@ const Login = () => {
 
   const loginHandler = () =>{
     setTimeout(() =>{
-      // let data = {
-      //   email,
-      //   password
-      // }
-      // navigation.navigate('Home');
         dispatch(loginAction.login(email, password));
     }, 500);
-    // console.log(data);
-    // props.navigation.navigate('ProductDetail');
-};
+  };
+
+  const authState = useSelector((state) => state.auth);
+  const {isLoading, isError} = authState;
 
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <LoadingModal
+        requestLoading={isLoading && !isError ? isLoading : false}
+      />
       <View style={styles.parent}>
         <Text style={styles.title}>Welcome to <Text style={styles.childTitle}>RuangDev</Text></Text>
         <Text><Text style={styles.childTitle}>RuangDev</Text> is a community of awesome Indonesia {'\n'}developers</Text>
@@ -165,9 +167,6 @@ const styles = StyleSheet.create({
     container: {
         padding: 20,
         alignItems: 'center',
-        // flex: 1,
-        // height: '100%',
-        // backgroundColor: 'green',
     },
     parent: {
         alignItems: 'center',

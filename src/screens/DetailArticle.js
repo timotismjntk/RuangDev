@@ -19,9 +19,13 @@ import ReadNext from '../components/ReadNext';
 import AuthorProfile from '../components/AuthorProfile';
 import Footer from '../components/FooterBeforeLogin';
 import {API_URL} from '@env';
+import Moment from 'moment';
 
 // import actions
 import getDetailArticleAction from '../redux/actions/getDetailArticle';
+
+// import components
+import LoadingModal from '../components/LoadingModal';
 
 const DetailArticle = ({route, navigation}) => {
   const dispatch = useDispatch();
@@ -40,13 +44,17 @@ const DetailArticle = ({route, navigation}) => {
   }, []);
 
   const article = useSelector((state) => state.getDetailArticle);
-  const {data} = article;
+  const {data, isLoading, isError} = article;
 
   const profile = useSelector((state) => state.profile.data.results);
 
   return (
     <>
       <ScrollView contentContainerStyle={styles.container}>
+        <LoadingModal
+          duration={100}
+          requestLoading={isLoading && !isError ? isLoading : false}
+        />
         <View>
           {data ? (
             <Image
@@ -100,7 +108,9 @@ const DetailArticle = ({route, navigation}) => {
                 {data && data.Authors ? data.Authors.fullname : ''}
               </Text>
             </TouchableOpacity>
-            <Text style={styles.text}>Nov 11</Text>
+            <Text style={styles.text}>
+              {Moment(data.createdAt).format('LL')}
+            </Text>
             <Text style={styles.text}>&middot;</Text>
             <Text style={styles.text}>{data.readEstimated} min read</Text>
           </View>

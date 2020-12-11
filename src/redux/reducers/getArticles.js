@@ -1,9 +1,10 @@
 /* eslint-disable prettier/prettier */
 const initialState = {
-    data: {},
+    data: [],
     isLoading: false,
     isError: false,
     alertMsg: '',
+    pageInfo: {},
   };
 
   export default (state = initialState, action) => {
@@ -27,6 +28,7 @@ const initialState = {
           ...state,
           isLoading: false,
           data: action.payload.data.results,
+          pageInfo: action.payload.data.pageInfo,
         };
       }
       default: {

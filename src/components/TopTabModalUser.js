@@ -27,7 +27,14 @@ export default function TopTabModalUser(props) {
     close();
     setTimeout(() => {
       navigation.navigate('CreateNewsArticle');
-    });
+    }, 250);
+  };
+
+  const navigateToEditProfile = () => {
+    close();
+    setTimeout(() => {
+      navigation.navigate('EditProfile');
+    }, 250);
   };
 
   return (
@@ -52,7 +59,9 @@ export default function TopTabModalUser(props) {
             <TouchableOpacity style={styles.menu}>
               <Text style={styles.menuText}>Reading Lists</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menu}>
+            <TouchableOpacity
+              style={styles.menu}
+              onPress={navigateToEditProfile}>
               <Text style={styles.menuText}>Settings</Text>
             </TouchableOpacity>
             <View style={styles.lineBorder} />

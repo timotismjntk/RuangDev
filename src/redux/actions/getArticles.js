@@ -2,10 +2,10 @@
 import http from '../../helpers/http';
 
 export default {
-  getArticles: (sort = '') => {
+  getArticles: (sort = '', page = 1) => {
     return {
       type: 'GET_ARTICLES',
-      payload: http().get(`news?sort=${sort}&limit=20`),
+      payload: http().get(`news?sort=${sort}&page=${page}`),
     };
   },
 };

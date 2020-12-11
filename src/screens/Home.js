@@ -15,6 +15,7 @@ import Moment from 'moment';
 
 // import component
 import DropDownPicker from '../components/DropDownPicker';
+import LoadingModal from '../components/LoadingModal';
 
 // import actions
 import articleAction from '../redux/actions/getArticles';
@@ -48,13 +49,37 @@ const Home = (props) => {
   }, []);
 
   const listArticle = useSelector((state) => state.getArticle);
-  const {data, isLoading} = listArticle;
+  const {data, pageInfo, isLoading, isError} = listArticle;
 
   useEffect(() => {
     if (data) {
       setStoreData(data);
     }
   }, [data]);
+
+  const refreshArticle = () => {
+    dispatch(articleAction.getArticles()).catch((e) => {
+      console.log(e.message);
+    });
+  };
+
+  const moreArticle = () => {
+    if (pageInfo.nextLink) {
+      const nextPage = pageInfo.currentPage + 1;
+      dispatch(articleAction.getArticles('', nextPage)).catch((e) => {
+        console.log(e.message);
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (pageInfo.currentPage > 1) {
+      const newData = storeData.concat(data);
+      setStoreData(newData);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageInfo]);
+  console.log(storeData);
 
   const newsItem = ({item, onPress, style}) => (
     <TouchableOpacity
@@ -152,16 +177,23 @@ const Home = (props) => {
   };
 
   return (
-    data &&
-    storeData &&
-    !isLoading && (
-      <FlatList
-        data={storeData ? storeData : []}
-        contentContainerStyle={styles.separator}
-        renderItem={newsItem}
-        ListHeaderComponent={header}
-        keyExtractor={(item) => item && item.id.toString()}
-      />
+    data && (
+      <View>
+        <LoadingModal
+          requestLoading={isLoading && !isError ? isLoading : false}
+        />
+        <FlatList
+          data={storeData ? storeData : []}
+          contentContainerStyle={styles.separator}
+          refreshing={isLoading}
+          onRefresh={refreshArticle}
+          onEndReached={moreArticle}
+          onEndReachedThreshold={0.5}
+          renderItem={newsItem}
+          ListHeaderComponent={header}
+          keyExtractor={(item) => item && item.id.toString()}
+        />
+      </View>
     )
   );
 };

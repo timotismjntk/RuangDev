@@ -10,8 +10,11 @@ import {
   Image,
   Alert,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import ImagePicker from 'react-native-image-picker';
+
+// import components
+import LoadingModal from '../components/LoadingModal';
 
 const CreateNewsArticle = () => {
   const [height, setHeight] = useState(30);
@@ -23,34 +26,86 @@ const CreateNewsArticle = () => {
     setHeight2(heights2);
   };
 
+  const [tag, setTag] = useState('');
+  const [data, setData] = useState(new FormData());
+  const [dataTag, setDataTag] = useState(new FormData());
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [items, setItems] = useState('');
+
+  useEffect(() => {
+    if (tag.length > 0) {
+      console.log(tag.match(/\s/g));
+      if (tag.match(/\s/g) !== null) {
+        data.append('tags', tag.trim());
+        dataTag.append('tag', tag.trim());
+        setTimeout(() => {
+          setTag('');
+        }, 150);
+      }
+    }
+  }, [tag, data, dataTag]);
+  console.log(data);
+
+  const clearDataTag = () => {
+    setDataTag(new FormData());
+    data._parts.forEach((el, index) => {
+      console.log(el[0]);
+      if (el[0] === 'tags') {
+        delete el[0];
+        delete el[1];
+        console.log('hapus tags');
+      }
+    });
+  };
+
   const options = {
     title: 'Select Avatar',
-    customButtons: [{name: 'fb', title: 'Choose Photo from Instagram'}],
     storageOptions: {
       skipBackup: true,
       path: 'images',
     },
   };
-  const [items, setItems] = useState('');
-  const createFormData = (props) => {
-    const data = new FormData();
-    console.log(props);
-
+  const createFormDataImage = (props) => {
     data.append('picture', {
       name: props.fileName,
       type: props.type,
       uri: props.uri,
     });
-    console.log(data._parts[0][1]);
     if (props.fileSize > 1000000) {
       Alert.alert('image size is too large, atleast < 1000 Kb');
     } else {
-      setItems(data._parts[0][1].uri);
+      setItems(props.uri);
     }
   };
+
+  const removeImage = () => {
+    data._parts.forEach((el, index) => {
+      console.log(el[0]);
+      if (el[0] === 'picture') {
+        delete el[0];
+        delete el[1];
+        console.log('hapus');
+      }
+    });
+    setItems('');
+  };
+
+  const createNews = () => {
+    data.append('title', title);
+    data.append('content', content);
+    data._parts.map((el, index) => {
+      if (el[0] === undefined) {
+        delete data._parts[index]; //untuk menghapus array yang empty/kosong
+      }
+    });
+    console.log(data);
+  };
+
   return (
     <>
       <ScrollView style={styles.container}>
+        <LoadingModal duration={250} />
         {items ? (
           <Image source={{uri: items}} style={styles.headerImage} />
         ) : null}
@@ -71,11 +126,7 @@ const CreateNewsArticle = () => {
                       response.customButton,
                     );
                   } else {
-                    //   const source = { uri: response.uri };
-                    // You can also display the image using data:
-                    // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-                    //   console.log(source);
-                    createFormData(response);
+                    createFormDataImage(response);
                   }
                 });
               }}>
@@ -87,7 +138,6 @@ const CreateNewsArticle = () => {
                 style={[styles.btn, {width: 100}]}
                 onPress={() => {
                   ImagePicker.showImagePicker(options, (response) => {
-                    // console.log('Response = ', response);
                     if (response.didCancel) {
                       console.log('User cancelled image picker');
                     } else if (response.error) {
@@ -98,56 +148,64 @@ const CreateNewsArticle = () => {
                         response.customButton,
                       );
                     } else {
-                      //   const source = { uri: response.uri };
-                      // You can also display the image using data:
-                      // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-                      //   console.log(source);
-                      createFormData(response);
+                      createFormDataImage(response);
                     }
                   });
                 }}>
                 <Text>Change</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.remove}
-                onPress={() => {
-                  setItems('');
-                }}>
+              <TouchableOpacity style={styles.remove} onPress={removeImage}>
                 <Text style={{color: 'red'}}>Remove</Text>
               </TouchableOpacity>
             </View>
           )}
           <TextInput
-            multiLine={true}
-            maxLength={50}
+            maxLength={100}
             placeholder="New post title here..."
             multiline={true}
             numberOfLines={4}
+            onChangeText={(text) => setTitle(text)}
             editable={true}
             style={[styles.title, {height: height}]}
             onContentSizeChange={(e) =>
               updateSize(e.nativeEvent.contentSize.height)
             }
           />
-          <TextInput
-            multiLine={true}
-            // maxLength={50}
-            placeholder="Add up to 4 tags..."
-            multiline={true}
-            numberOfLines={4}
-            editable={true}
-            style={styles.tags}
-          />
+          <View style={styles.tagsItem}>
+            {dataTag._parts &&
+              dataTag._parts.length > 0 &&
+              dataTag._parts.map((el, index) => {
+                return (
+                  <Text style={styles.tags} key={index.toString()}>
+                    #{el[1]}
+                  </Text>
+                );
+              })}
+            {dataTag._parts.length > 0 && (
+              <TouchableOpacity onPress={clearDataTag} style={styles.btnClear}>
+                <Icon name="times" size={15} color="rgba(0, 0, 0, 0.5)" />
+              </TouchableOpacity>
+            )}
+          </View>
+          {dataTag._parts.length >= 4 ? null : (
+            <TextInput
+              value={tag}
+              placeholder="Add up to 4 tags..."
+              onChangeText={(text) => setTag(text)}
+              numberOfLines={4}
+              editable={dataTag._parts.length >= 4 ? false : true}
+              style={styles.tagsInput}
+            />
+          )}
         </KeyboardAvoidingView>
         <View style={styles.lineBorder} />
         <KeyboardAvoidingView
           style={[styles.contentInput, {height: 250 + height2}]}>
           <TextInput
-            multiLine={true}
-            maxLength={50}
             placeholder="Write your post content here..."
             multiline={true}
             numberOfLines={4}
+            onChangeText={(text) => setContent(text)}
             editable={true}
             style={[styles.contenttext, {height: height2}]}
             onContentSizeChange={(e) =>
@@ -158,7 +216,21 @@ const CreateNewsArticle = () => {
         <View style={styles.lineBorder} />
       </ScrollView>
       <View style={styles.btmNav}>
-        <TouchableOpacity style={styles.btnsubmit}>
+        <TouchableOpacity
+          style={[
+            styles.btnsubmit,
+            !(
+              dataTag._parts.length > 0 &&
+              title.length > 0 &&
+              content.length > 50
+            ) && {backgroundColor: 'grey'},
+          ]}
+          disabled={
+            dataTag._parts.length > 0 && title.length > 0 && content.length > 50
+              ? false
+              : true
+          }
+          onPress={createNews}>
           <Text style={styles.submittext}>Publish</Text>
         </TouchableOpacity>
       </View>
@@ -211,11 +283,24 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlignVertical: 'top',
   },
-  tags: {
+  tagsInput: {
     // backgroundColor: 'grey',
     fontSize: 15,
     color: '#64707d',
     height: 40,
+  },
+  tags: {
+    fontSize: 18,
+    color: '#3B49DF',
+    marginRight: 8,
+  },
+  tagsItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  btnClear: {
+    marginTop: 5,
   },
   lineBorder: {
     borderTopWidth: 0.5,

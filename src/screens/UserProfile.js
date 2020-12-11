@@ -14,6 +14,9 @@ import Footer from '../components/FooterAfterLogin';
 import Moment from 'moment';
 import {API_URL} from '@env';
 
+// import components
+import LoadingModal from '../components/LoadingModal';
+
 const UserProfile = (props) => {
   const profile = useSelector((state) => state.profile.data.results);
 
@@ -23,6 +26,7 @@ const UserProfile = (props) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <LoadingModal duration={450} />
       <View style={styles.lineBorder} />
       <TouchableOpacity style={styles.imageAuthor}>
         <Thumbnail
