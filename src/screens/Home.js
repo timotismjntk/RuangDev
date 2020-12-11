@@ -1,177 +1,273 @@
 /* eslint-disable react-native/no-inline-styles */
-/* eslint-disable prettier/prettier */
 import React, {useEffect, useState} from 'react';
-import {View, ScrollView, FlatList, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {useSelector, useDispatch} from 'react-redux';
+import {
+  View,
+  FlatList,
+  Image,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Picker} from 'native-base';
 import {Thumbnail} from 'native-base';
-import Work from '../assets/work.jpeg';
+import Moment from 'moment';
 
-const Home = () => {
-  const [selected, setSelected] = useState('');
-  // const [s]
-  const newsItem = ({ item, onPress, style }) => (
-    <View>
-      <View style={styles.imageContainer}>
-        <Thumbnail small source={{uri: 'https://ui-avatars.com/api/?size=50&name=timo'}} />
+// import component
+import DropDownPicker from '../components/DropDownPicker';
+
+// import actions
+import articleAction from '../redux/actions/getArticles';
+import profileAction from '../redux/actions/profile';
+
+import {API_URL} from '@env';
+
+const Home = (props) => {
+  const [openModal, setOpenModal] = useState(false);
+  const dispatch = useDispatch();
+  const [storeData, setStoreData] = useState([]);
+  const [select, setSelect] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+  const detailItems = (itemId) => {
+    setSelect(true);
+    setTimeout(() => {
+      props.navigation.navigate('detailArticle', {
+        id: Number(itemId),
+      });
+      setSelect(false);
+      setSelectedId(null);
+    }, 1000);
+  };
+
+  const token = useSelector((state) => state.auth.token);
+
+  useEffect(() => {
+    dispatch(articleAction.getArticles());
+    dispatch(profileAction.getProfile(token));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const listArticle = useSelector((state) => state.getArticle);
+  const {data, isLoading} = listArticle;
+
+  useEffect(() => {
+    if (data) {
+      setStoreData(data);
+    }
+  }, [data]);
+
+  const newsItem = ({item, onPress, style}) => (
+    <TouchableOpacity
+      style={[
+        styles.articleItem,
+        selectedId === item.id && styles.articleSelect,
+      ]}
+      onPress={() => {
+        detailItems(item.id);
+        setSelectedId(item.id);
+      }}>
+      {item.newsimage ? (
+        <Image source={{uri: API_URL + item.newsimage}} style={styles.image} />
+      ) : null}
+      <View style={styles.articlewrap}>
+        <TouchableOpacity style={styles.imageContainer}>
+          <Thumbnail
+            small
+            source={
+              !item.Authors.avatar
+                ? {
+                    uri: `https://ui-avatars.com/api/?size=50&name=${item.Authors.fullname}`,
+                  }
+                : {uri: API_URL + item.Authors.avatar}
+            }
+          />
+        </TouchableOpacity>
+        <View style={styles.content}>
+          <Text style={styles.authorName}>{item.Authors.fullname}</Text>
+          <Text style={styles.createdAt}>
+            {Moment(item.createdAt).format('LL')}
+          </Text>
+          <Text style={styles.contenttitle}>{item.title}</Text>
+          <View style={styles.tagsWrap}>
+            {item.Tags.map((el) => {
+              return (
+                <Text style={styles.tags} key={el.id.toString()}>
+                  #{el.name}
+                </Text>
+              );
+            })}
+          </View>
+          <View style={styles.bottomArticle}>
+            <View style={styles.likecomment}>
+              <TouchableOpacity style={styles.btnlikecomment}>
+                <Icon
+                  name="heart-outline"
+                  color="#ff2052"
+                  size={20}
+                  style={{marginRight: 10}}
+                />
+                <Text>{item.Likes[0] ? item.Likes[0].likesCount : 0}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{flexDirection: 'row'}}>
+                <Icon
+                  name="comment-outline"
+                  size={20}
+                  style={{marginRight: 10}}
+                />
+                <Text>10</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.estimatedWrap}>
+              <Text style={styles.estimatedRead}>
+                {item.readEstimated} min read
+              </Text>
+            </View>
+          </View>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
-  const data = [{
-    name: 'timo',
-  }];
-  console.log(data.length);
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
+
+  const dropDownState = useSelector((state) => state.dropDown);
+  const {sortby} = dropDownState;
+
+  const header = () => {
+    return (
       <View style={styles.nav}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <TouchableOpacity>
-              <Icon name="database" size={35} color="white" />
-            </TouchableOpacity>
-            <Text style={styles.title}>Posts</Text>
-          </View>
-          <View style={{flexDirection: 'row'}}>
-            <TouchableOpacity style={styles.btnSort}>
-              <View style={{backgroundColor: 'white', borderRadius: 5}}>
-                <Picker
-                  note
-                  mode="dropdown"
-                  style={{ width: 98, color: 'black', height: 38 }}
-                  selectedValue={selected}
-                  onValueChange={(value)=>{setSelected(value);}}
-                >
-                  <Picker.Item label="New" value="key0" />
-                  <Picker.Item label="Favorites" value="key1" />
-                </Picker>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Icon name="lightning-bolt-outline" size={35} color="white" />
-            </TouchableOpacity>
-          </View>
-      </View>
-      <View>
-        {/* <FlatList
-          // data={info}
-          renderItem={newsItem}
-          // keyExtractor={(item) => item.id}
-          // extraData={selectedId}
-        /> */}
-      <View>
-      <TouchableOpacity style={styles.articleItem}>
-        {data.length ? <Image source={Work} style={styles.image} /> : null}
-        <View style={styles.articlewrap}>
-          <TouchableOpacity style={styles.imageContainer}>
-            <Thumbnail small source={{uri: 'https://ui-avatars.com/api/?size=50&name=timo'}} />
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <TouchableOpacity>
+            <Icon name="database" size={35} color="white" />
           </TouchableOpacity>
-          <View style={styles.content}>
-            <Text>Douglas Parsons</Text>
-            <Text>Nov 10</Text>
-            <Text style={styles.contenttitle}>Write better code and be a better programmer by NEVER USING ELSE statements</Text>
-            <Text>#webdev #go #javascript #beginners</Text>
-            <View style={styles.likecomment}>
-              <TouchableOpacity style={styles.btnlikecomment}>
-                <Icon name="heart-outline" size={20} style={{marginRight: 10}} />
-                <Text>40</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{flexDirection: 'row'}}>
-                <Icon name="comment-outline" size={20} style={{marginRight: 10}} />
-                <Text>10</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          <Text style={styles.title}>Posts</Text>
         </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.articleItem}>
-        {data.length ? <Image source={Work} style={styles.image} /> : null}
-        <View style={styles.articlewrap}>
-          <TouchableOpacity style={styles.imageContainer}>
-            <Thumbnail small source={{uri: 'https://ui-avatars.com/api/?size=50&name=timo'}} />
-          </TouchableOpacity>
-          <View style={styles.content}>
-            <Text>Douglas Parsons</Text>
-            <Text>Nov 10</Text>
-            <Text style={styles.contenttitle}>Write better code and be a better programmer by NEVER USING ELSE statements</Text>
-            <Text>#webdev #go #javascript #beginners</Text>
-            <View style={styles.likecomment}>
-              <TouchableOpacity style={styles.btnlikecomment}>
-                <Icon name="heart-outline" color="#ff2052" size={20} style={{marginRight: 10}} />
-                <Text>40</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{flexDirection: 'row'}}>
-                <Icon name="comment-outline" size={20} style={{marginRight: 10}} />
-                <Text>10</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setOpenModal(true)}
+          style={[styles.dropDownModal, openModal && styles.modalActive]}>
+          <Text style={{color: 'black'}}>{sortby}</Text>
+          <Icon name="menu-down" size={32} />
+          <DropDownPicker open={openModal} close={() => setOpenModal(false)} />
+        </TouchableOpacity>
       </View>
-      </View>
-    </ScrollView>
+    );
+  };
+
+  return (
+    data &&
+    storeData &&
+    !isLoading && (
+      <FlatList
+        data={storeData ? storeData : []}
+        contentContainerStyle={styles.separator}
+        renderItem={newsItem}
+        ListHeaderComponent={header}
+        keyExtractor={(item) => item && item.id.toString()}
+      />
+    )
   );
 };
 
 export default Home;
 
 const styles = StyleSheet.create({
-    container: {
-        // backgroundColor: 'red',
-        // padding: 20,
-    },
-    nav: {
-      paddingTop: 10,
-      paddingBottom: 10,
-      paddingLeft: 20,
-      paddingRight: 20,
-      backgroundColor: '#08090A',
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-    },
-    title: {
-      marginLeft: 10,
-      fontSize: 20,
-      color: 'white',
-    },
-    btnSort: {
-      borderRadius: 8,
-      borderWidth: 1,
-      borderBottomWidth: 4.5,
-      borderRightWidth: 4.5,
-      borderColor: '#B5BDC4',
-      marginRight: 10,
-    },
-    articleItem: {
-      borderBottomWidth: 1,
-      borderColor: 'grey',
-      // paddingTop: 10,
-      paddingBottom: 10,
-    },
-    articlewrap: {
-      flexDirection: 'row',
-      width: '100%',
-      padding: 10,
-    },
-    image: {
-      width: '100%',
-      height: 180,
-      // resizeMode: 'contain',
-    },
-    content: {
-      width: '90%',
-      marginLeft: 10,
-    },
-    contenttitle: {
-      fontSize: 20,
-      fontWeight: 'bold',
+  container: {
+    flex: 1,
+  },
+  nav: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+    backgroundColor: 'orange',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  title: {
+    marginLeft: 10,
+    fontSize: 20,
+    color: 'white',
+  },
+  dropDownModal: {
+    height: 45,
+    width: 105,
+    paddingLeft: 10,
+    paddingRight: 5,
+    borderWidth: 1,
+    borderColor: '#B5BDC4',
+    borderRadius: 5,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: 'white',
+  },
+  modalActive: {
+    borderColor: '#3B49DF',
+    borderBottomWidth: 4,
+    borderRightWidth: 3,
+  },
+  articleItem: {
+    borderBottomWidth: 10,
+    borderColor: 'rgba(0, 0, 0, 0.15)',
+  },
+  articleSelect: {
+    borderColor: '#3B49DF',
+    borderWidth: 3,
+  },
+  articlewrap: {
+    flexDirection: 'row',
+    width: '100%',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.3)',
+  },
+  image: {
+    width: '100%',
+    height: 180,
+  },
+  content: {
+    width: '90%',
+    marginLeft: 10,
+  },
+  authorName: {
+    fontSize: 15,
+  },
+  createdAt: {
+    color: 'grey',
+  },
+  contenttitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  bottomArticle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  tagsWrap: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingRight: 10,
+    marginBottom: 10,
+  },
+  tags: {
+    color: 'grey',
   },
   likecomment: {
     flexDirection: 'row',
     marginTop: 10,
+    paddingBottom: 0,
   },
   btnlikecomment: {
     flexDirection: 'row',
     marginRight: 25,
   },
+  estimatedWrap: {
+    marginTop: 10,
+    paddingRight: 10,
+  },
+  estimatedRead: {
+    color: 'grey',
+  },
+  separator: {},
 });

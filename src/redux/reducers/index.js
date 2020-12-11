@@ -1,0 +1,30 @@
+/* eslint-disable prettier/prettier */
+import {combineReducers} from 'redux';
+
+import auth from './auth';
+import getArticle from './getArticles';
+import getDetailArticle from './getDetailArticle';
+import dropDown from './dropDown';
+import profile from './profile';
+
+export default combineReducers({
+  auth,
+  getArticle,
+  getDetailArticle,
+  dropDown,
+  profile,
+});
+
+
+// const rootReducer = (state, action) => {
+//   console.log(action);
+//   if (action.type === 'LOGOUT_USER') {
+//     // console.log('true');
+//     state = undefined;
+//     // return appReducer(undefined, action);
+//   }
+//   // console.log(state);
+//   return appReducer(state, action);
+// };
+
+// export default rootReducer;

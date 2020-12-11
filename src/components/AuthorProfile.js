@@ -2,26 +2,34 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Thumbnail} from 'native-base';
+import {API_URL} from '@env';
 
-const AuthorProfile = () => {
+const AuthorProfile = (props) => {
+    const {
+        data,
+    } = props;
   return (
     <View style={styles.container}>
         <View style={styles.lineBorder} />
         <TouchableOpacity style={styles.imageAuthor}>
-            <Thumbnail source={{uri: 'https://ui-avatars.com/api/?size=60&name=timo'}} />
-            <Text style={styles.name}>Jonathan Ringeisen</Text>
+            <Thumbnail source={
+                  data
+                    ? data
+                      ? {uri: API_URL + data.avatar}
+                      : {
+                          uri: `https://ui-avatars.com/api/?size=50&name=${data ? data.fullname : 'guest'}`,
+                        }
+                    : {
+                        uri: `https://ui-avatars.com/api/?size=50&name=${data ? data.fullname : 'guest'}`,
+                      }
+                } />
+            <Text style={styles.name}>{data && data.fullname}</Text>
         </TouchableOpacity>
         <View style={styles.bio}>
-            <Text style={styles.biotext}>
-        💻 Programming is the best job in the world! 🤟 https://simonholdorf.com
-👨‍💻 Coder
-👨‍🚀 Maker -- https://thesmartcoder.dev, https://smartgain.cc
-🧙 Writer
-🏰 Building an Empire
-            </Text>
+            <Text style={styles.biotext}>404 Bio not found!</Text>
         </View>
         <View style={styles.btnWrap}>
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity style={styles.btn} disabled={true}>
                 <Text style={styles.btnText}>Follow</Text>
             </TouchableOpacity>
         </View>
@@ -44,7 +52,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 0.5,
         borderBottomWidth: 0.5,
         borderColor: '#B5BDC4',
-        height: 30,
+        height: 40,
         backgroundColor: '#2e577f',
     },
     parent: {
@@ -57,12 +65,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         zIndex: 5,
-        top: -17,
+        top: -15,
     },
     name: {
         marginLeft: 10,
-        marginTop: 10,
-        fontSize: 20,
+        marginTop: 15,
+        fontSize: 25,
         fontWeight: 'bold',
     },
     bio: {
@@ -78,6 +86,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
     },
     btn: {
+        opacity: 1,
         backgroundColor: '#3B49DF',
         height: 40,
         alignItems: 'center',

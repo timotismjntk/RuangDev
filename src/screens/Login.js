@@ -1,15 +1,21 @@
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import {View, ScrollView, Image, Platform, KeyboardAvoidingView, Text, TextInput, StyleSheet, TouchableOpacity, Button} from 'react-native';
 import { Formik, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { CheckBox } from 'react-native-btr';
+
 // import icon
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Smug from '../assets/smug.png';
 import Anonymous from '../assets/anonymous.png';
 
+import loginAction from '../redux/actions/auth';
+
 const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [shadow, setShadow] = useState('#B5BDC4');
   const [bottom, setBottom] = useState(1);
   const [bottom2, setBottom2] = useState(1);
@@ -17,7 +23,22 @@ const Login = () => {
   const [isSelected, setSelection] = useState(false);
   let styleCustom = { borderColor: shadow, borderBottomWidth: bottom };
   let styleCustom2 = { borderColor: shadow2, borderBottomWidth: bottom2, marginBottom: 10 };
-  let emailInput = null;
+  const dispatch = useDispatch();
+
+  const loginHandler = () =>{
+    setTimeout(() =>{
+      // let data = {
+      //   email,
+      //   password
+      // }
+      // navigation.navigate('Home');
+        dispatch(loginAction.login(email, password));
+    }, 500);
+    // console.log(data);
+    // props.navigation.navigate('ProductDetail');
+};
+
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.parent}>
@@ -44,51 +65,27 @@ const Login = () => {
             </View>
             <View style={styles.line}/>
       </View>
-      <Formik
-          initialValues={{ email: '', password: '' }}
-          validationSchema={Yup.object({
-            email: Yup.string()
-              .email('Invalid Email')
-              .required('Required'),
-            password: Yup.string()
-              .required('Required'),
-          })}
-          onSubmit={(values, formikActions) => {
-            setTimeout(() => {
-              formikActions.setSubmitting(false);
-            }, 500);
-          }}>
-          {props => (
-            <KeyboardAvoidingView style={{width: '100%'}}>
+      <KeyboardAvoidingView style={{width: '100%'}}>
              <Text style={styles.email}>Email</Text>
              <TextInput
-                onChangeText={props.handleChange('email')}
-                onBlur={()=>{props.handleBlur('email'); setShadow('#B5BDC4'); setBottom(1);}}
-                value={props.values.email}
+                onChangeText={(text)=>{setEmail(text)}}
+                onBlur={()=>{setShadow('#B5BDC4'); setBottom(1);}}
+                value={email}
                 onFocus={()=>{setShadow('#3B49DF'); setBottom(4);}}
                 placeholder="Email"
                 style={[styles.input, styleCustom]}
-                onSubmitEditing={() => {
-                  emailInput.focus();
-                }}
               />
-              {props.touched.email && props.errors.email ? (
-                <Text style={styles.error}>{props.errors.email}</Text>
-              ) : null}
               <Text style={styles.password}>Password</Text>
               <TextInput
-                onChangeText={props.handleChange('password')}
-                onBlur={()=>{props.handleBlur('password'); setShadow2('#B5BDC4'); setBottom2(1);}}
-                value={props.values.password}
+                onChangeText={(text)=>{setPassword(text)}}
+                onBlur={()=>{setShadow2('#B5BDC4'); setBottom2(1);}}
+                value={password}
                 onFocus={()=>{setShadow2('#3B49DF'); setBottom2(4);}}
                 placeholder="Password"
                 style={[styles.input, styleCustom2]}
-                ref={el => emailInput = el}
+                // ref={el => emailInput = el}
                 secureTextEntry={true}
               />
-              {props.touched.password && props.errors.password ? (
-                <Text style={styles.error}>{props.errors.password}</Text>
-              ) : null}
               <View style={styles.checkbox}>
                 <CheckBox
                   checked={isSelected}
@@ -98,16 +95,12 @@ const Login = () => {
                 <Text style={styles.checkboxtext}>Remember Me</Text>
               </View>
               <TouchableOpacity
-                onPress={props.handleSubmit}
+                onPress={loginHandler}
                 mode="contained"
-                loading={props.isSubmitting}
-                disabled={props.isSubmitting}
                 style={styles.btnsubmit}>
                     <Text style={styles.textsubmit}>Continue</Text>
               </TouchableOpacity>
             </KeyboardAvoidingView>
-          )}
-        </Formik>
         <TouchableOpacity style={styles.forgotlink}>
             <Text style={styles.textforgot}>I forgot my password</Text>
         </TouchableOpacity>
