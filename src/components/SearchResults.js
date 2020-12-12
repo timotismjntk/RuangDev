@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {
@@ -11,49 +12,35 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Thumbnail} from 'native-base';
 import Moment from 'moment';
-
-// import component
-import DropDownPicker from '../components/DropDownPicker';
-import LoadingModal from '../components/LoadingModal';
+import {useNavigation} from '@react-navigation/native';
 
 // import actions
-import articleAction from '../redux/actions/getArticles';
-import profileAction from '../redux/actions/profile';
-import loginAction from '../redux/actions/auth';
+import searchArticleAction from '../redux/actions/searchArticles';
 
 import {API_URL} from '@env';
 
-const Home = (props) => {
-  const [openModal, setOpenModal] = useState(false);
+const SearchResults = (props) => {
   const dispatch = useDispatch();
   const [storeData, setStoreData] = useState([]);
-  const [select, setSelect] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const detailItems = (itemId) => {
-    setSelect(true);
     setTimeout(() => {
       props.navigation.navigate('detailArticle', {
         id: Number(itemId),
       });
-      setSelect(false);
       setSelectedId(null);
     }, 1000);
   };
 
-  const token = useSelector((state) => state.auth.token);
-
   useEffect(() => {
-    dispatch(articleAction.getArticles());
-    dispatch(profileAction.getProfile(token));
-    dispatch(loginAction.clearMessage());
+    if (props.request) {
+      dispatch(searchArticleAction.searchArticles(props.search));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [props.request]);
 
-  const listArticle = useSelector((state) => state.getArticle);
+  const listArticle = useSelector((state) => state.searchArticles);
   const {data, pageInfo, isLoading, isError} = listArticle;
-
-  const dropDownState = useSelector((state) => state.dropDown);
-  const {sortby} = dropDownState;
 
   useEffect(() => {
     if (data) {
@@ -62,7 +49,7 @@ const Home = (props) => {
   }, [data]);
 
   const refreshArticle = () => {
-    dispatch(articleAction.getArticles()).catch((e) => {
+    dispatch(searchArticleAction.searchArticles(props.search)).catch((e) => {
       console.log(e.message);
     });
   };
@@ -70,20 +57,11 @@ const Home = (props) => {
   const moreArticle = () => {
     if (pageInfo.nextLink) {
       const nextPage = pageInfo.currentPage + 1;
-      if (sortby === 'Category') {
-        dispatch(articleAction.getArticles('categoryId', nextPage)).catch(
-          (e) => {
-            console.log(e.message);
-          },
-        );
-      }
-      if (sortby === 'Newest') {
-        dispatch(articleAction.getArticles('createdAt', nextPage)).catch(
-          (e) => {
-            console.log(e.message);
-          },
-        );
-      }
+      dispatch(
+        searchArticleAction.searchArticles(props.search, nextPage),
+      ).catch((e) => {
+        console.log(e.message);
+      });
     }
   };
 
@@ -94,7 +72,6 @@ const Home = (props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageInfo]);
-  console.log(storeData);
 
   const newsItem = ({item, onPress, style}) => (
     <TouchableOpacity
@@ -168,49 +145,23 @@ const Home = (props) => {
     </TouchableOpacity>
   );
 
-  const header = () => {
-    return (
-      <View style={styles.nav}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <TouchableOpacity>
-            <Icon name="database" size={35} color="white" />
-          </TouchableOpacity>
-          <Text style={styles.title}>Posts</Text>
-        </View>
-        <TouchableOpacity
-          onPress={() => setOpenModal(true)}
-          style={[styles.dropDownModal, openModal && styles.modalActive]}>
-          <Text style={{color: 'black'}}>{sortby}</Text>
-          <Icon name="menu-down" size={32} />
-          <DropDownPicker open={openModal} close={() => setOpenModal(false)} />
-        </TouchableOpacity>
-      </View>
-    );
-  };
-
   return (
     data && (
-      <View>
-        <LoadingModal
-          requestLoading={isLoading && !isError ? isLoading : false}
-        />
-        <FlatList
-          data={storeData ? storeData : []}
-          contentContainerStyle={styles.separator}
-          refreshing={isLoading}
-          onRefresh={refreshArticle}
-          onEndReached={moreArticle}
-          onEndReachedThreshold={0.5}
-          renderItem={newsItem}
-          ListHeaderComponent={header}
-          keyExtractor={(item) => item && item.id.toString()}
-        />
-      </View>
+      <FlatList
+        data={storeData ? storeData : []}
+        contentContainerStyle={styles.separator}
+        refreshing={isLoading}
+        onRefresh={refreshArticle}
+        onEndReached={moreArticle}
+        onEndReachedThreshold={0.5}
+        renderItem={newsItem}
+        keyExtractor={(item) => item && item.id.toString()}
+      />
     )
   );
 };
 
-export default Home;
+export default SearchResults;
 
 const styles = StyleSheet.create({
   container: {

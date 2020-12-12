@@ -53,6 +53,8 @@ const initialState = {
         return {
           ...state,
           alertMsg: '',
+          isError: false,
+          isLoading: false,
         };
       }
       default: {

@@ -1,12 +1,22 @@
-/* eslint-disable prettier/prettier */
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const FooterBeforeLogin = () => {
+  const navigation = useNavigation();
+
+  const navigateToHome = () => {
+    navigation.navigate('Home');
+  };
+  const navigateToWrite = () => {
+    navigation.navigate('CreateNewsArticle');
+  };
+
   return (
     <View style={styles.footer}>
       <View style={styles.group}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={navigateToHome}>
           <Text style={styles.grouptext}>Home</Text>
         </TouchableOpacity>
         <TouchableOpacity>
@@ -47,8 +57,10 @@ const FooterBeforeLogin = () => {
         <TouchableOpacity>
           <Text style={styles.grouptext}>Contact</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={[styles.grouptext, {fontWeight: 'bold'}]}>Write a post</Text>
+        <TouchableOpacity onPress={navigateToWrite}>
+          <Text style={[styles.grouptext, {fontWeight: 'bold'}]}>
+            Write a post
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

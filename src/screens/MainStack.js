@@ -8,6 +8,7 @@ import DetailArticle from '../screens/DetailArticle';
 import UserProfile from '../screens/UserProfile';
 import EditProfile from '../screens/EditProfile';
 import CreateNewsArticle from '../screens/CreateNewsArticle';
+import SearchNews from '../screens/SearchNews';
 
 // import header
 import HeaderRight from '../components/HeaderRight';
@@ -78,6 +79,18 @@ const MainStack = () => {
           headerLeft: '',
           headerTitle: '',
           headerRight: () => <HeaderRightClose />,
+        }}
+      />
+      <Stack.Screen
+        name="SearchNews"
+        component={SearchNews}
+        options={{
+          headerStyle: {
+            shadowOpacity: 0,
+          },
+          headerRight: () => <HeaderRight />,
+          headerLeft: () => <HeaderLeft />,
+          headerTitle: '',
         }}
       />
     </Stack.Navigator>

@@ -4,6 +4,8 @@ import {combineReducers} from 'redux';
 import auth from './auth';
 import getArticle from './getArticles';
 import getDetailArticle from './getDetailArticle';
+import searchArticles from './searchArticles';
+import myArticles from './myArticles';
 import dropDown from './dropDown';
 import profile from './profile';
 
@@ -11,6 +13,8 @@ export default combineReducers({
   auth,
   getArticle,
   getDetailArticle,
+  searchArticles,
+  myArticles,
   dropDown,
   profile,
 });

@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import http from '../../helpers/http';
 import qs from 'qs';
 
@@ -9,10 +8,16 @@ export default {
       payload: http(token).get('users'),
     };
   },
+  updatePassword: (token, data) => {
+    return {
+      type: 'UPDATE_PASSWORD',
+      payload: http(token).patch('users', qs.stringify(data)),
+    };
+  },
   updateProfile: (token, data) => {
     return {
       type: 'PATCH_PROFILE',
-      payload: http(token).patch('users/update', qs.stringify(data)),
+      payload: http(token).patch('users', data),
     };
   },
   uploadProfileImage: (token, data) => {

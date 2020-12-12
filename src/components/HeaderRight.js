@@ -4,15 +4,17 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Thumbnail} from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {API_URL} from '@env';
+import {useNavigation} from '@react-navigation/native';
 
 // import components
 import TopTabModalUser from '../components/TopTabModalUser';
 
 const HeaderRight = (props) => {
   const profile = useSelector((state) => state.profile.data.results);
+  const navigation = useNavigation();
 
   const searchHandler = () => {
-    props.navigation.navigate('Search');
+    navigation.navigate('SearchNews');
   };
 
   const [openModal, setOpenModal] = useState(false);

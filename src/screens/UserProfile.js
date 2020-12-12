@@ -16,17 +16,17 @@ import {API_URL} from '@env';
 
 // import components
 import LoadingModal from '../components/LoadingModal';
+import {useNavigation} from '@react-navigation/native';
 
-const UserProfile = (props) => {
+const Header = () => {
   const profile = useSelector((state) => state.profile.data.results);
+  const navigation = useNavigation();
 
   const navigateToEditProfile = () => {
-    props.navigation.navigate('EditProfile');
+    navigation.navigate('EditProfile');
   };
-
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <LoadingModal duration={450} />
+    <View>
       <View style={styles.lineBorder} />
       <TouchableOpacity style={styles.imageAuthor}>
         <Thumbnail
@@ -67,20 +67,22 @@ const UserProfile = (props) => {
         </TouchableOpacity>
       </View>
       <View style={styles.lineBorder2} />
-      <View style={styles.article}>
-        <UserArticle />
-      </View>
-      <Footer />
-    </ScrollView>
+    </View>
+  );
+};
+
+const UserProfile = () => {
+  return (
+    <View>
+      <LoadingModal duration={450} />
+      <UserArticle header={<Header />} footer={<Footer />} />
+    </View>
   );
 };
 
 export default UserProfile;
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 20,
-  },
   lineBorder: {
     borderTopWidth: 0.5,
     borderBottomWidth: 0.5,

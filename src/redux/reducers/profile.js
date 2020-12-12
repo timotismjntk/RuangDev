@@ -60,6 +60,29 @@ const initialState = {
           updated: true,
         };
       }
+      case 'UPDATE_PASSWORD_PENDING': {
+        return {
+          ...state,
+          isLoading: true,
+        };
+      }
+      case 'UPDATE_PASSWORD_REJECTED': {
+        return {
+          ...state,
+          isLoading: false,
+          isError: true,
+          alertMsg: 'There is an error at request data',
+        };
+      }
+      case 'UPDATE_PASSWORD_FULFILLED': {
+        console.log(action.payload);
+        return {
+          ...state,
+          isLoading: false,
+          alertMsg: 'Profile updated',
+          updated: true,
+        };
+      }
       case 'PATCH_PROFILE_IMAGE_PENDING': {
         return {
           ...state,

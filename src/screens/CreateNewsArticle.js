@@ -35,17 +35,16 @@ const CreateNewsArticle = () => {
 
   useEffect(() => {
     if (tag.length > 0) {
-      console.log(tag.match(/\s/g));
       if (tag.match(/\s/g) !== null) {
         data.append('tags', tag.trim());
         dataTag.append('tag', tag.trim());
         setTimeout(() => {
           setTag('');
-        }, 150);
+        }, 10);
       }
     }
-  }, [tag, data, dataTag]);
-  console.log(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tag]);
 
   const clearDataTag = () => {
     setDataTag(new FormData());
