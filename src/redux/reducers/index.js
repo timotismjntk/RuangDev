@@ -8,6 +8,7 @@ import searchArticles from './searchArticles';
 import myArticles from './myArticles';
 import dropDown from './dropDown';
 import profile from './profile';
+import comments from './comments';
 
 export default combineReducers({
   auth,
@@ -17,6 +18,7 @@ export default combineReducers({
   myArticles,
   dropDown,
   profile,
+  comments,
 });
 
 

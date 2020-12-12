@@ -37,9 +37,10 @@ const DetailArticle = ({route, navigation}) => {
     console.log(newheight);
   };
   const {id} = route.params;
+  const token = useSelector((state) => state.auth.token);
 
   useEffect(() => {
-    dispatch(getDetailArticleAction.getDetailArticles(id));
+    dispatch(getDetailArticleAction.getDetailArticles(token, id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

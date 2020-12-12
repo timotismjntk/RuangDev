@@ -43,7 +43,7 @@ const Home = (props) => {
   const token = useSelector((state) => state.auth.token);
 
   useEffect(() => {
-    dispatch(articleAction.getArticles());
+    dispatch(articleAction.getArticles(token));
     dispatch(profileAction.getProfile(token));
     dispatch(loginAction.clearMessage());
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,7 +62,7 @@ const Home = (props) => {
   }, [data]);
 
   const refreshArticle = () => {
-    dispatch(articleAction.getArticles()).catch((e) => {
+    dispatch(articleAction.getArticles(token)).catch((e) => {
       console.log(e.message);
     });
   };
@@ -71,14 +71,14 @@ const Home = (props) => {
     if (pageInfo.nextLink) {
       const nextPage = pageInfo.currentPage + 1;
       if (sortby === 'Category') {
-        dispatch(articleAction.getArticles('categoryId', nextPage)).catch(
-          (e) => {
-            console.log(e.message);
-          },
-        );
+        dispatch(
+          articleAction.getArticles(token, 'categoryId', nextPage),
+        ).catch((e) => {
+          console.log(e.message);
+        });
       }
       if (sortby === 'Newest') {
-        dispatch(articleAction.getArticles('createdAt', nextPage)).catch(
+        dispatch(articleAction.getArticles(token, 'createdAt', nextPage)).catch(
           (e) => {
             console.log(e.message);
           },
@@ -154,7 +154,9 @@ const Home = (props) => {
                   size={20}
                   style={{marginRight: 10}}
                 />
-                <Text>10</Text>
+                <Text>
+                  {item.Comments[0] ? item.Comments[0].commentsCount : 0}
+                </Text>
               </TouchableOpacity>
             </View>
             <View style={styles.estimatedWrap}>

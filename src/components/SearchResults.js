@@ -23,6 +23,9 @@ const SearchResults = (props) => {
   const dispatch = useDispatch();
   const [storeData, setStoreData] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
+
+  const token = useSelector((state) => state.auth.token);
+
   const detailItems = (itemId) => {
     setTimeout(() => {
       props.navigation.navigate('detailArticle', {
@@ -34,7 +37,7 @@ const SearchResults = (props) => {
 
   useEffect(() => {
     if (props.request) {
-      dispatch(searchArticleAction.searchArticles(props.search));
+      dispatch(searchArticleAction.searchArticles(token, props.search));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.request]);
@@ -49,16 +52,18 @@ const SearchResults = (props) => {
   }, [data]);
 
   const refreshArticle = () => {
-    dispatch(searchArticleAction.searchArticles(props.search)).catch((e) => {
-      console.log(e.message);
-    });
+    dispatch(searchArticleAction.searchArticles(token, props.search)).catch(
+      (e) => {
+        console.log(e.message);
+      },
+    );
   };
 
   const moreArticle = () => {
     if (pageInfo.nextLink) {
       const nextPage = pageInfo.currentPage + 1;
       dispatch(
-        searchArticleAction.searchArticles(props.search, nextPage),
+        searchArticleAction.searchArticles(token, props.search, nextPage),
       ).catch((e) => {
         console.log(e.message);
       });

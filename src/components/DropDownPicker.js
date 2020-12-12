@@ -21,17 +21,19 @@ const DropDownPicker = (props) => {
   const dropDownState = useSelector((state) => state.dropDown);
   const {sortby} = dropDownState;
 
+  const token = useSelector((state) => state.auth.token);
+
   const sortByNew = () => {
     setModalVisible(close);
     dispatch(dropdownActions.dropDown('Newest'));
-    dispatch(articleAction.getArticles('createdAt')).catch((e) => {
+    dispatch(articleAction.getArticles(token, 'createdAt')).catch((e) => {
       console.log(e.message);
     });
   };
   const sortByCategory = () => {
     setModalVisible(close);
     dispatch(dropdownActions.dropDown('Category'));
-    dispatch(articleAction.getArticles('categoryId')).catch((e) => {
+    dispatch(articleAction.getArticles(token, 'categoryId')).catch((e) => {
       console.log(e.message);
     });
   };
