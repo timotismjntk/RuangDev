@@ -8,6 +8,7 @@ import com.oblador.vectoricons.VectorIconsPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
+// import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;

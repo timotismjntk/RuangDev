@@ -3,10 +3,13 @@ import {useSelector, useDispatch} from 'react-redux';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
+import SplashScreen from 'react-native-splash-screen';
 
 // import screens
 import Login from '../screens/Login';
 import SignUp from '../screens/Signup';
+import LandingScreen from '../screens/LandingScreen';
+import ForgotPassword from '../screens/ForgotPassword';
 
 // import stack
 import MainStack from '../screens/MainStack';
@@ -20,6 +23,10 @@ import DrawerCustomContent from '../components/DrawerCustomContent';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const Root = () => {
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
+
   const LoginState = useSelector((state) => state.auth);
 
   const {isLogin} = LoginState;
@@ -29,12 +36,22 @@ const Root = () => {
         <Stack.Navigator>
           <Stack.Screen
             options={{headerShown: false}}
+            name="LandingScreen"
+            component={LandingScreen}
+          />
+          <Stack.Screen
+            options={{headerShown: false}}
             name="Login"
             component={Login}
           />
           <Stack.Screen
             name="SignUp"
             component={SignUp}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ForgotPassword"
+            component={ForgotPassword}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

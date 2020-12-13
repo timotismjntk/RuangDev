@@ -15,47 +15,20 @@ const FooterBeforeLogin = () => {
   return (
     <View style={styles.footer}>
       <View style={styles.group}>
-        <TouchableOpacity>
-          <Text style={styles.grouptext}>Home</Text>
+        <TouchableOpacity disabled={true}>
+          <Text style={styles.grouptext}>About</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.grouptext}>Listings</Text>
+        <TouchableOpacity disabled={true}>
+          <Text style={styles.grouptext}>Privacy Policy</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.grouptext}>Podcasts</Text>
+        <TouchableOpacity disabled={true}>
+          <Text style={styles.grouptext}>Term of use</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.grouptext}>Videos</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.grouptext}>Tags</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.grouptext}>Code of Conduct</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.grouptext}>FAQ</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.grouptext}>RuangDev Shop</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.grouptext}>Sponsors</Text>
+        <TouchableOpacity disabled={true}>
+          <Text style={styles.grouptext}>Contact</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.group}>
-        <TouchableOpacity>
-          <Text style={styles.grouptext}>About</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.grouptext}>Privacy Policy</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.grouptext}>Term of use</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.grouptext}>Contact</Text>
-        </TouchableOpacity>
         <TouchableOpacity onPress={gotoSignUp}>
           <Text style={styles.grouptext}>Sign Up</Text>
         </TouchableOpacity>

@@ -13,6 +13,7 @@ import {
   DrawerItem,
 } from '@react-navigation/drawer';
 import {persistor} from '../redux/store';
+import SplashScreen from 'react-native-splash-screen';
 
 // import actions
 import authAction from '../redux/actions/auth';
@@ -39,6 +40,7 @@ const DrawerCustomContent = (props) => {
       setSignoutLoading(false);
       setErrorToast('Signout now');
       setShow(true);
+      SplashScreen.show();
       setTimeout(async () => {
         setShow(false);
         await persistor.purge();
@@ -47,8 +49,8 @@ const DrawerCustomContent = (props) => {
         await dispatch(authAction.logout());
       }, 1000);
     } catch (e) {}
-  }
-  
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <LoadingModal requestLoading={signoutLoading} />

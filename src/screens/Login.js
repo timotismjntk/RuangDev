@@ -11,11 +11,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {CheckBox} from 'react-native-btr';
+import SplashScreen from 'react-native-splash-screen';
 
 // import components
 import LoadingModal from '../components/LoadingModal';
 import AlertToasts from '../components/AlertToast';
-import Footer from '../components/FooterBeforeLogin';
 
 // import icon
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -24,7 +24,7 @@ import Anonymous from '../assets/anonymous.png';
 
 import loginAction from '../redux/actions/auth';
 
-const Login = () => {
+const Login = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [shadow, setShadow] = useState('#B5BDC4');
@@ -32,6 +32,9 @@ const Login = () => {
   const [bottom2, setBottom2] = useState(1);
   const [shadow2, setShadow2] = useState('#B5BDC4');
   const [isSelected, setSelection] = useState(false);
+  const [error, SetError] = useState(false);
+  const [errorEmail, SetErrorEmail] = useState(false);
+  const [errorMessageEmail, setErrorMessageEmail] = useState('');
   const [messageToast, setMessageToast] = useState('');
   const [show, setShow] = useState(false);
 
@@ -43,10 +46,56 @@ const Login = () => {
   };
   const dispatch = useDispatch();
 
-  const loginHandler = () => {
-    setTimeout(() => {
-      dispatch(loginAction.login(email, password));
-    }, 500);
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
+
+  const check =
+    email.includes('@mail.') ||
+    email.includes('@gmail.') ||
+    email.includes('@yahoo.') ||
+    email.includes('@ymail.') ||
+    email.includes('@co.') ||
+    email.includes('@net.');
+
+  useEffect(() => {
+    if (check && password.toString().length > 0) {
+      SetError(false);
+    } else {
+      SetError(true);
+    }
+  }, [check, password]);
+
+  useEffect(() => {
+    if (check) {
+      SetErrorEmail(false);
+    } else {
+      if (email.length > 0) {
+        setErrorMessageEmail('invalid email');
+        SetErrorEmail(true);
+      } else {
+        SetErrorEmail(false);
+      }
+    }
+  }, [check, email]);
+
+  const gotoForgotPassword = () => {
+    props.navigation.navigate('ForgotPassword');
+  };
+
+  const loginHandler = async () => {
+    if (email.length > 0 && password.length > 0) {
+      dispatch(loginAction.login(email, password)).catch((e) => {
+        console.log(e.message);
+        setMessageToast(e.message);
+        setShow(true);
+        setTimeout(() => {
+          setShow(false);
+          setMessageToast('');
+          dispatch(loginAction.clearMessage());
+        }, 2000);
+      });
+    }
   };
 
   const authState = useSelector((state) => state.auth);
@@ -72,6 +121,15 @@ const Login = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, isError]);
 
+  useEffect(() => {
+    if (isLoading && !isError) {
+      setTimeout(() => {
+        dispatch(loginAction.clearMessage());
+      }, 1000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, isError]);
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -88,13 +146,13 @@ const Login = () => {
             awesome Indonesia {'\n'}developers
           </Text>
         </View>
-        <TouchableOpacity style={styles.btnGit}>
+        <TouchableOpacity style={styles.btnGit} disabled={true}>
           <View style={styles.btnWrap}>
             <Icon name="github" size={25} color="white" />
             <Text style={styles.btnText}>Continue with Github</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.btnTweet}>
+        <TouchableOpacity style={styles.btnTweet} disabled={true}>
           <View style={styles.btnWrap}>
             <Icon name="twitter" size={25} color="white" />
             <Text style={styles.btnText}>Continue with Twitter</Text>
@@ -112,6 +170,9 @@ const Login = () => {
         </View>
         <KeyboardAvoidingView style={{width: '100%'}}>
           <Text style={styles.email}>Email</Text>
+          {errorEmail && (
+            <Text style={{color: 'red'}}>{errorMessageEmail}</Text>
+          )}
           <TextInput
             onChangeText={(text) => {
               setEmail(text);
@@ -149,20 +210,26 @@ const Login = () => {
           />
           <View style={styles.checkbox}>
             <CheckBox
-              checked={isSelected}
-              onPress={() => setSelection(!isSelected)}
+              checked={true}
+              disabled={true}
+              // onPress={() => setSelection(!isSelected)}
               color="#3B49DF"
             />
             <Text style={styles.checkboxtext}>Remember Me</Text>
           </View>
           <TouchableOpacity
+            disabled={error && errorEmail ? true : false}
             onPress={loginHandler}
-            mode="contained"
-            style={styles.btnsubmit}>
+            style={[
+              styles.btnsubmit,
+              error && errorEmail && {backgroundColor: 'grey'},
+            ]}>
             <Text style={styles.textsubmit}>Continue</Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
-        <TouchableOpacity style={styles.forgotlink}>
+        <TouchableOpacity
+          style={styles.forgotlink}
+          onPress={gotoForgotPassword}>
           <Text style={styles.textforgot}>I forgot my password</Text>
         </TouchableOpacity>
         <Text>
@@ -175,7 +242,7 @@ const Login = () => {
           {'\n'} excess data.
         </Text>
       </View>
-      <Footer />
+      {/* <Footer /> */}
     </ScrollView>
   );
 };

@@ -299,7 +299,7 @@ const SignUp = (props) => {
           {'\n'} excess data.
         </Text>
       </View>
-      <Footer />
+      {/* <Footer /> */}
     </ScrollView>
   );
 };
