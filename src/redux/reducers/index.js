@@ -6,6 +6,7 @@ import getArticle from './getArticles';
 import getDetailArticle from './getDetailArticle';
 import searchArticles from './searchArticles';
 import myArticles from './myArticles';
+import postArticle from './postArticle';
 import dropDown from './dropDown';
 import profile from './profile';
 import comments from './comments';
@@ -17,6 +18,7 @@ export default combineReducers({
   getDetailArticle,
   searchArticles,
   myArticles,
+  postArticle,
   dropDown,
   profile,
   comments,

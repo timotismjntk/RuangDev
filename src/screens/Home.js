@@ -70,12 +70,12 @@ const Home = (props) => {
   const moreArticle = () => {
     if (pageInfo.nextLink) {
       const nextPage = pageInfo.currentPage + 1;
-      if (sortby === 'Category') {
-        dispatch(
-          articleAction.getArticles(token, 'categoryId', nextPage),
-        ).catch((e) => {
-          console.log(e.message);
-        });
+      if (sortby === 'Tags') {
+        dispatch(articleAction.getArticles(token, 'tags', nextPage)).catch(
+          (e) => {
+            console.log(e.message);
+          },
+        );
       }
       if (sortby === 'Newest') {
         dispatch(articleAction.getArticles(token, 'createdAt', nextPage)).catch(
@@ -290,12 +290,14 @@ const styles = StyleSheet.create({
   },
   tagsWrap: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     paddingRight: 10,
     marginBottom: 10,
+    flexWrap: 'wrap',
   },
   tags: {
     color: 'grey',
+    marginRight: 5,
   },
   likecomment: {
     flexDirection: 'row',

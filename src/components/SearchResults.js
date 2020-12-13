@@ -249,6 +249,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingRight: 10,
     marginBottom: 10,
+    flexWrap: 'wrap',
   },
   tags: {
     color: 'grey',

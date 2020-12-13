@@ -67,12 +67,16 @@ const Header = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.lineBorder2} />
+      <View style={styles.myArticle}>
+        <Text style={styles.title}>My article</Text>
+        <View style={styles.underline} />
+      </View>
     </View>
   );
 };
 
 /* why i create like this because to warning from flatlist, cannot combined
-   flatlist inside scrollview*/
+   flatlist inside scrollview */
 
 const UserProfile = () => {
   return (
@@ -152,8 +156,23 @@ const styles = StyleSheet.create({
   github: {
     marginLeft: 10,
   },
-  article: {
-    paddingHorizontal: 10,
-    marginVertical: 10,
+  myArticle: {
+    marginTop: 10,
+    paddingLeft: 10,
+  },
+  title: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  underline: {
+    position: 'relative',
+    top: -20,
+    borderBottomWidth: 4,
+    // borderRightWidth: 3,
+    height: 10,
+    width: 120,
+    borderColor: '#3B49DF',
+    // marginBottom: 10,
   },
 });

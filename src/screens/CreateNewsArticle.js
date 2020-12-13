@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import {
   View,
   ScrollView,
@@ -15,8 +16,13 @@ import ImagePicker from 'react-native-image-picker';
 
 // import components
 import LoadingModal from '../components/LoadingModal';
+import AlertToasts from '../components/AlertToast';
 
-const CreateNewsArticle = () => {
+// import actions
+import postNewsAction from '../redux/actions/postArticle';
+import articleAction from '../redux/actions/getArticles';
+
+const CreateNewsArticle = (props) => {
   const [height, setHeight] = useState(30);
   const updateSize = (heights) => {
     setHeight(heights);
@@ -25,6 +31,7 @@ const CreateNewsArticle = () => {
   const updateSize2 = (heights2) => {
     setHeight2(heights2);
   };
+  const dispatch = useDispatch();
 
   const [tag, setTag] = useState('');
   const [data, setData] = useState(new FormData());
@@ -32,6 +39,9 @@ const CreateNewsArticle = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [items, setItems] = useState('');
+  const [messageToast, setMessageToast] = useState('');
+  const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (tag.length > 0) {
@@ -90,6 +100,8 @@ const CreateNewsArticle = () => {
     setItems('');
   };
 
+  const token = useSelector((state) => state.auth.token);
+
   const createNews = () => {
     data.append('title', title);
     data.append('content', content);
@@ -99,16 +111,67 @@ const CreateNewsArticle = () => {
       }
     });
     console.log(data);
+    dispatch(postNewsAction.postArticle(token, data)).catch((e) => {
+      console.log(e.message);
+    });
   };
+  const postArticleState = useSelector((state) => state.postArticle);
+  const {isLoading, isError, isSuccess, alertMsg} = postArticleState;
+
+  useEffect(() => {
+    if (isError && !isLoading) {
+      setMessageToast(alertMsg);
+      setLoading(true);
+      setShow(true);
+      setTimeout(() => {
+        setShow(false);
+        dispatch(postNewsAction.clearMessage());
+        setLoading(false);
+      }, 1000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, isError]);
+
+  useEffect(() => {
+    if (isSuccess && !isLoading) {
+      setShow(true);
+      setLoading(true);
+      setMessageToast(alertMsg);
+      setTimeout(() => {
+        setShow(false);
+        dispatch(postNewsAction.clearMessage());
+        dispatch(articleAction.getArticles(token)).catch((e) => {
+          console.log(e.message);
+        });
+        setLoading(false);
+        props.navigation.navigate('Home');
+      }, 2500);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, isSuccess]);
+
+  useEffect(() => {
+    if (content.length > 2000) {
+      setShow(true);
+      setMessageToast(
+        'Sorry you have reached to 2000, content must be less or equal 2000',
+      );
+    } else {
+      setShow(false);
+      setMessageToast('');
+    }
+  }, [content]);
 
   return (
     <>
       <ScrollView style={styles.container}>
         <LoadingModal duration={250} />
+        <LoadingModal requestLoading={loading} />
+        <AlertToasts visible={show} message={messageToast} />
         {items ? (
           <Image source={{uri: items}} style={styles.headerImage} />
         ) : null}
-        <KeyboardAvoidingView style={styles.inputSection}>
+        <View style={styles.inputSection}>
           {!items ? (
             <TouchableOpacity
               style={styles.btn}
@@ -196,17 +259,21 @@ const CreateNewsArticle = () => {
               style={styles.tagsInput}
             />
           )}
-        </KeyboardAvoidingView>
+        </View>
         <View style={styles.lineBorder} />
         <KeyboardAvoidingView
-          style={[styles.contentInput, {height: 250 + height2}]}>
+          style={[
+            styles.contentInput,
+            {height: 250 + height2, maxHeight: 500},
+          ]}>
           <TextInput
             placeholder="Write your post content here..."
             multiline={true}
-            numberOfLines={4}
+            numberOfLines={20}
+            maxLength={2000}
             onChangeText={(text) => setContent(text)}
             editable={true}
-            style={[styles.contenttext, {height: height2}]}
+            style={[styles.contenttext]}
             onContentSizeChange={(e) =>
               updateSize2(e.nativeEvent.contentSize.height)
             }
@@ -274,7 +341,7 @@ const styles = StyleSheet.create({
   },
   inputSection: {
     padding: 10,
-    flex: 1,
+    // flex: 1,
   },
   title: {
     fontSize: 30,
@@ -297,6 +364,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
+    flexWrap: 'wrap',
   },
   btnClear: {
     marginTop: 5,
@@ -316,8 +384,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#64707d',
     textAlignVertical: 'top',
-    // backgroundColor: 'red',
-    flex: 1,
+    // flex: 1,
   },
   btnsubmit: {
     backgroundColor: '#3B49DF',

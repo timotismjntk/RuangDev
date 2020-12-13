@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {
@@ -17,7 +18,7 @@ import Work from '../assets/work.jpeg';
 import CommentComponent from '../components/CommentComponent';
 import ReadNext from '../components/ReadNext';
 import AuthorProfile from '../components/AuthorProfile';
-import Footer from '../components/FooterBeforeLogin';
+import Footer from '../components/FooterAfterLogin';
 import {API_URL} from '@env';
 import Moment from 'moment';
 
@@ -84,11 +85,47 @@ const DetailArticle = ({route, navigation}) => {
           <Text style={styles.title}>{data && data.title}</Text>
           <View style={styles.tagger}>
             {data.Tags
-              ? data.Tags.map((el) => {
+              ? data.Tags.map((el, index) => {
                   return (
-                    <Text style={styles.tags} key={el.id.toString()}>
-                      #{el.name}
-                    </Text>
+                    <TouchableOpacity
+                      style={[
+                        styles.tags,
+                        index === 0 && {
+                          backgroundColor: 'red',
+                          marginBottom: 5,
+                        },
+                        index === 1 && {
+                          backgroundColor: 'green',
+                          marginBottom: 5,
+                        },
+                        index === 2 && {
+                          backgroundColor: '#3B49DF',
+                          marginBottom: 5,
+                        },
+                        index === 3 && {
+                          marginBottom: 5,
+                        },
+                      ]}
+                      key={el.id.toString()}>
+                      <Text
+                        style={[
+                          index === 0 && {
+                            color: 'white',
+                          },
+                          index === 1 && {
+                            color: 'white',
+                          },
+                          index === 2 && {
+                            color: 'white',
+                          },
+                          index === 3 && {
+                            color: 'grey',
+                          },
+                        ]}
+                        key={el.id.toString()}>
+                        <Text style={{color: 'grey'}}>#</Text>{el.name}
+                      </Text>
+                    </TouchableOpacity>
                   );
                 })
               : null}
@@ -125,11 +162,15 @@ const DetailArticle = ({route, navigation}) => {
                 {data && data.Authors ? data.Authors.fullname : ''}
               </Text>
             </TouchableOpacity>
-            <Text style={styles.text}>
-              {Moment(data.createdAt).format('LL')}
-            </Text>
-            <Text style={styles.text}>&middot;</Text>
-            <Text style={styles.text}>{data.readEstimated} min read</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text style={styles.text}>
+                {Moment(data.createdAt).format('LL')}
+              </Text>
+              <Text style={[styles.text, styles.middot]}>&middot;</Text>
+              <Text style={styles.text}>{data.readEstimated} min read</Text>
+              <Text style={[styles.text, styles.middot]}>&middot;</Text>
+              <Text style={styles.text}>{data.readCount}x views</Text>
+            </View>
           </View>
           <View style={styles.contentarticle}>
             <Text style={{fontSize: 20}}>{data.content}</Text>
@@ -184,10 +225,10 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   authorwrap: {
-    width: '80%',
+    paddingHorizontal: 5,
     justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
+    // flexDirection: 'row',
+    // alignItems: 'center',
   },
   title: {
     fontSize: 28,
@@ -201,9 +242,13 @@ const styles = StyleSheet.create({
   tagger: {
     flexDirection: 'row',
     marginVertical: 10,
+    flexWrap: 'wrap',
   },
   tags: {
     marginRight: 10,
+    padding: 4,
+    borderRadius: 5,
+    alignItems: 'center',
   },
   imageAuthor: {
     marginRight: 5,
@@ -223,6 +268,9 @@ const styles = StyleSheet.create({
   text: {
     color: 'grey',
     marginRight: 5,
+  },
+  middot: {
+    fontSize: 30,
   },
   contentarticle: {
     marginTop: 20,

@@ -19,6 +19,7 @@ import Moment from 'moment';
 
 // import actions
 import commentsActions from '../redux/actions/comments';
+import articleAction from '../redux/actions/getArticles';
 
 const MultiLineTextInput = (props) => {
   const [shadow, setShadow] = useState('#B5BDC4');
@@ -116,6 +117,9 @@ const SendComment = () => {
     if (isSuccess && !isLoading) {
       dispatch(commentsActions.getComments(token, id));
       setTimeout(() => {
+        dispatch(articleAction.getArticles(token)).catch((e) => {
+          console.log(e.message);
+        });
         dispatch(commentsActions.clearMessage());
       }, 500);
     }

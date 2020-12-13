@@ -31,8 +31,6 @@ const UserArticle = (props) => {
 
   const newsItem = ({item, onPress, style}) => (
     <View style={styles.parent}>
-      <Text style={styles.title}>My article</Text>
-      <View style={styles.underline} />
       <View style={styles.wrap}>
         <TouchableOpacity
           style={styles.item}
@@ -82,21 +80,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: 80,
     paddingHorizontal: 10,
-  },
-  title: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  underline: {
-    position: 'relative',
-    top: -20,
-    borderBottomWidth: 4,
-    // borderRightWidth: 3,
-    height: 10,
-    width: 120,
-    borderColor: '#3B49DF',
-    marginBottom: 10,
   },
   newstitle: {
     fontSize: 18,

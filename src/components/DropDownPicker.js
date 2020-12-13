@@ -32,8 +32,8 @@ const DropDownPicker = (props) => {
   };
   const sortByCategory = () => {
     setModalVisible(close);
-    dispatch(dropdownActions.dropDown('Category'));
-    dispatch(articleAction.getArticles(token, 'categoryId')).catch((e) => {
+    dispatch(dropdownActions.dropDown('Tags'));
+    dispatch(articleAction.getArticles(token, 'tags')).catch((e) => {
       console.log(e.message);
     });
   };
@@ -70,14 +70,11 @@ const DropDownPicker = (props) => {
             onPress={sortByCategory}
             style={[
               styles.modalContent,
-              sortby === 'Category' && {backgroundColor: 'green'},
+              sortby === 'Tags' && {backgroundColor: 'green'},
             ]}>
             <Text
-              style={[
-                styles.textModal,
-                sortby === 'Category' && {color: 'white'},
-              ]}>
-              Category
+              style={[styles.textModal, sortby === 'Tags' && {color: 'white'}]}>
+              Tags
             </Text>
           </TouchableOpacity>
         </View>
