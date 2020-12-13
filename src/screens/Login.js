@@ -56,7 +56,8 @@ const Login = (props) => {
     email.includes('@yahoo.') ||
     email.includes('@ymail.') ||
     email.includes('@co.') ||
-    email.includes('@net.');
+    email.includes('@net.') ||
+    email.includes('@news.');
 
   useEffect(() => {
     if (check && password.toString().length > 0) {
@@ -87,13 +88,15 @@ const Login = (props) => {
     if (email.length > 0 && password.length > 0) {
       dispatch(loginAction.login(email, password)).catch((e) => {
         console.log(e.message);
-        setMessageToast(e.message);
-        setShow(true);
-        setTimeout(() => {
-          setShow(false);
-          setMessageToast('');
-          dispatch(loginAction.clearMessage());
-        }, 2000);
+        if (e.response.status !== 400) {
+          setMessageToast(e.message);
+          setShow(true);
+          setTimeout(() => {
+            setShow(false);
+            setMessageToast('');
+            dispatch(loginAction.clearMessage());
+          }, 2000);
+        }
       });
     }
   };

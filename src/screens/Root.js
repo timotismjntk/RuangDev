@@ -18,18 +18,37 @@ import SettingStack from '../screens/SettingStack';
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
+// import components
 import DrawerCustomContent from '../components/DrawerCustomContent';
 
+// import icon
 import Icon from 'react-native-vector-icons/FontAwesome5';
+
+// import actions
+import authAction from '../redux/actions/auth';
 
 const Root = () => {
   useEffect(() => {
     SplashScreen.hide();
   }, []);
+  const dispatch = useDispatch();
 
   const LoginState = useSelector((state) => state.auth);
 
   const {isLogin} = LoginState;
+
+  const token = useSelector((state) => state.auth.token);
+
+  // check if jwt token is expired, if expired it automaticly navigate to landing screen
+  useEffect(() => {
+    if (token) {
+      dispatch(authAction.checkTokenExpired(token)).catch((e) => {
+        console.log(e.message);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, token]);
+
   return (
     <NavigationContainer>
       {!isLogin ? (

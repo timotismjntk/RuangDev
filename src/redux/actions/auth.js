@@ -22,4 +22,8 @@ export default {
     type: 'persist/REHYDRATED',
     payload,
   }),
+  checkTokenExpired: (token) => ({
+    type: 'CHECK_REFRESH_TOKEN',
+    payload: http(token).post('auth/verify/token'),
+  }),
 };

@@ -55,10 +55,14 @@ const ForgotPassword = () => {
               ) : null}
               <TouchableOpacity
                 onPress={props.handleSubmit}
-                mode="contained"
-                loading={props.isSubmitting}
-                disabled={props.isSubmitting}
-                style={styles.btnsubmit}>
+                disabled={
+                  props.touched.email && props.errors.email ? true : false
+                }
+                style={[
+                  styles.btnsubmit,
+                  props.touched.email &&
+                    props.errors.email && {backgroundColor: 'grey'},
+                ]}>
                 <Text style={styles.textsubmit}>
                   Send me reset password instructions
                 </Text>
@@ -122,6 +126,8 @@ const styles = StyleSheet.create({
   },
   error: {
     color: '#3B49DF',
+    marginTop: 5,
+    fontWeight: 'bold',
   },
   footer: {
     // backgroundColor: 'grey',

@@ -30,10 +30,10 @@ const FooterBeforeLogin = () => {
       </View>
       <View style={styles.group}>
         <TouchableOpacity onPress={gotoSignUp}>
-          <Text style={styles.grouptext}>Sign Up</Text>
+          <Text style={[styles.grouptext, {fontWeight: 'bold'}]}>Sign Up</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={gotoLogin}>
-          <Text style={styles.grouptext}>Login</Text>
+          <Text style={[styles.grouptext, {fontWeight: 'bold'}]}>Login</Text>
         </TouchableOpacity>
       </View>
     </View>
