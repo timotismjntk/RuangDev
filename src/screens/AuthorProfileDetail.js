@@ -20,11 +20,7 @@ import Footer from '../components/FooterAfterLogin';
 
 const Header = () => {
   const author = useSelector((state) => state.getDetailArticle.data.Authors);
-  const navigation = useNavigation();
 
-  const navigateToEditProfile = () => {
-    navigation.navigate('EditProfile');
-  };
   return (
     <View>
       <View style={styles.lineBorder} />
@@ -68,7 +64,7 @@ const Header = () => {
       </View>
       <View style={styles.lineBorder2} />
       <View style={styles.articles}>
-        <Text style={styles.title}>Article collection</Text>
+        <Text style={styles.title}>Article:</Text>
         <View style={styles.underline} />
       </View>
     </View>

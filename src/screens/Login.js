@@ -11,10 +11,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {CheckBox} from 'react-native-btr';
-import AlertToasts from '../components/AlertToast';
 
 // import components
 import LoadingModal from '../components/LoadingModal';
+import AlertToasts from '../components/AlertToast';
 import Footer from '../components/FooterBeforeLogin';
 
 // import icon
@@ -73,106 +73,108 @@ const Login = () => {
   }, [isLoading, isError]);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <LoadingModal
-        requestLoading={isLoading && !isError ? isLoading : false}
-      />
-      <AlertToasts visible={show} message={messageToast} />
-      <View style={styles.parent}>
-        <Text style={styles.title}>
-          Welcome to <Text style={styles.childTitle}>RuangDev</Text>
-        </Text>
-        <Text>
-          <Text style={styles.childTitle}>RuangDev</Text> is a community of
-          awesome Indonesia {'\n'}developers
-        </Text>
-      </View>
-      <TouchableOpacity style={styles.btnGit}>
-        <View style={styles.btnWrap}>
-          <Icon name="github" size={25} color="white" />
-          <Text style={styles.btnText}>Continue with Github</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.btnTweet}>
-        <View style={styles.btnWrap}>
-          <Icon name="twitter" size={25} color="white" />
-          <Text style={styles.btnText}>Continue with Twitter</Text>
-        </View>
-      </TouchableOpacity>
-      <View style={styles.confirmationText}>
-        <View style={styles.line} />
-        <View>
-          <Text style={styles.textlink}>
-            Have a password? Continue with your
-            {'\n'} email address
+    <ScrollView>
+      <View style={styles.container}>
+        <LoadingModal
+          requestLoading={isLoading && !isError ? isLoading : false}
+        />
+        <AlertToasts visible={show} message={messageToast} />
+        <View style={styles.parent}>
+          <Text style={styles.title}>
+            Welcome to <Text style={styles.childTitle}>RuangDev</Text>
+          </Text>
+          <Text>
+            <Text style={styles.childTitle}>RuangDev</Text> is a community of
+            awesome Indonesia {'\n'}developers
           </Text>
         </View>
-        <View style={styles.line} />
-      </View>
-      <KeyboardAvoidingView style={{width: '100%'}}>
-        <Text style={styles.email}>Email</Text>
-        <TextInput
-          onChangeText={(text) => {
-            setEmail(text);
-          }}
-          onBlur={() => {
-            setShadow('#B5BDC4');
-            setBottom(1);
-          }}
-          value={email}
-          onFocus={() => {
-            setShadow('#3B49DF');
-            setBottom(4);
-          }}
-          placeholder="Email"
-          style={[styles.input, styleCustom]}
-        />
-        <Text style={styles.password}>Password</Text>
-        <TextInput
-          onChangeText={(text) => {
-            setPassword(text);
-          }}
-          onBlur={() => {
-            setShadow2('#B5BDC4');
-            setBottom2(1);
-          }}
-          value={password}
-          onFocus={() => {
-            setShadow2('#3B49DF');
-            setBottom2(4);
-          }}
-          placeholder="Password"
-          style={[styles.input, styleCustom2]}
-          // ref={el => emailInput = el}
-          secureTextEntry={true}
-        />
-        <View style={styles.checkbox}>
-          <CheckBox
-            checked={isSelected}
-            onPress={() => setSelection(!isSelected)}
-            color="#3B49DF"
-          />
-          <Text style={styles.checkboxtext}>Remember Me</Text>
-        </View>
-        <TouchableOpacity
-          onPress={loginHandler}
-          mode="contained"
-          style={styles.btnsubmit}>
-          <Text style={styles.textsubmit}>Continue</Text>
+        <TouchableOpacity style={styles.btnGit}>
+          <View style={styles.btnWrap}>
+            <Icon name="github" size={25} color="white" />
+            <Text style={styles.btnText}>Continue with Github</Text>
+          </View>
         </TouchableOpacity>
-      </KeyboardAvoidingView>
-      <TouchableOpacity style={styles.forgotlink}>
-        <Text style={styles.textforgot}>I forgot my password</Text>
-      </TouchableOpacity>
-      <Text>
-        Open Source <Image source={Smug} style={styles.image} />. Free Forever{' '}
-        <Icon name="heart" color="red" size={25} />
-      </Text>
-      <Text>
-        we strive for transparency{' '}
-        <Image source={Anonymous} style={styles.image} /> and don't collect
-        {'\n'} excess data.
-      </Text>
+        <TouchableOpacity style={styles.btnTweet}>
+          <View style={styles.btnWrap}>
+            <Icon name="twitter" size={25} color="white" />
+            <Text style={styles.btnText}>Continue with Twitter</Text>
+          </View>
+        </TouchableOpacity>
+        <View style={styles.confirmationText}>
+          <View style={styles.line} />
+          <View>
+            <Text style={styles.textlink}>
+              Have a password? Continue with your
+              {'\n'} email address
+            </Text>
+          </View>
+          <View style={styles.line} />
+        </View>
+        <KeyboardAvoidingView style={{width: '100%'}}>
+          <Text style={styles.email}>Email</Text>
+          <TextInput
+            onChangeText={(text) => {
+              setEmail(text);
+            }}
+            onBlur={() => {
+              setShadow('#B5BDC4');
+              setBottom(1);
+            }}
+            value={email}
+            onFocus={() => {
+              setShadow('#3B49DF');
+              setBottom(4);
+            }}
+            placeholder="Email"
+            style={[styles.input, styleCustom]}
+          />
+          <Text style={styles.password}>Password</Text>
+          <TextInput
+            onChangeText={(text) => {
+              setPassword(text);
+            }}
+            onBlur={() => {
+              setShadow2('#B5BDC4');
+              setBottom2(1);
+            }}
+            value={password}
+            onFocus={() => {
+              setShadow2('#3B49DF');
+              setBottom2(4);
+            }}
+            placeholder="Password"
+            style={[styles.input, styleCustom2]}
+            // ref={el => emailInput = el}
+            secureTextEntry={true}
+          />
+          <View style={styles.checkbox}>
+            <CheckBox
+              checked={isSelected}
+              onPress={() => setSelection(!isSelected)}
+              color="#3B49DF"
+            />
+            <Text style={styles.checkboxtext}>Remember Me</Text>
+          </View>
+          <TouchableOpacity
+            onPress={loginHandler}
+            mode="contained"
+            style={styles.btnsubmit}>
+            <Text style={styles.textsubmit}>Continue</Text>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+        <TouchableOpacity style={styles.forgotlink}>
+          <Text style={styles.textforgot}>I forgot my password</Text>
+        </TouchableOpacity>
+        <Text>
+          Open Source <Image source={Smug} style={styles.image} />. Free Forever{' '}
+          <Icon name="heart" color="red" size={25} />
+        </Text>
+        <Text>
+          we strive for transparency{' '}
+          <Image source={Anonymous} style={styles.image} /> and don't collect
+          {'\n'} excess data.
+        </Text>
+      </View>
       <Footer />
     </ScrollView>
   );

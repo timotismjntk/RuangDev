@@ -4,10 +4,36 @@ const initialState = {
     isError: false,
     token: '',
     alertMsg: '',
+    isSuccess: false,
+    isLoading: false,
   };
 
   export default (state = initialState, action) => {
     switch (action.type) {
+      case 'SIGNUP_USER_PENDING': {
+        return {
+          ...state,
+          isLoading: true,
+        };
+      }
+      case 'SIGNUP_USER_REJECTED': {
+        return {
+          ...state,
+          isLoading: false,
+          isSuccess: false,
+          isError: true,
+          alertMsg: action.payload.response.data.error,
+        };
+      }
+      case 'SIGNUP_USER_FULFILLED': {
+        return {
+          ...state,
+          isLoading: false,
+          isSuccess: true,
+          isError: false,
+          alertMsg: 'Signup Successfully',
+        };
+      }
       case 'AUTH_USER_PENDING': {
         return {
           ...state,
@@ -41,19 +67,21 @@ const initialState = {
         };
       }
       case 'LOGOUT_USER': {
-        //   localStorage.removeItem('token');
         return {
           isLogin: false,
           token: '',
           isError: false,
           alertMsg: 'Logout Successfully',
+          isSuccess: false,
+          isLoading: false,
         };
       }
       case 'CLEAR_MESSAGE': {
         return {
           ...state,
-          alertMsg: '',
           isError: false,
+          alertMsg: '',
+          isSuccess: false,
           isLoading: false,
         };
       }

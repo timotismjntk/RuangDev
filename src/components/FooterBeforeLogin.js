@@ -1,7 +1,17 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const FooterBeforeLogin = () => {
+  const navigation = useNavigation();
+
+  const gotoSignUp = () => {
+    navigation.navigate('SignUp');
+  };
+  const gotoLogin = () => {
+    navigation.navigate('Login');
+  };
+
   return (
     <View style={styles.footer}>
       <View style={styles.group}>
@@ -46,8 +56,11 @@ const FooterBeforeLogin = () => {
         <TouchableOpacity>
           <Text style={styles.grouptext}>Contact</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.grouptext}>Sign In/Up</Text>
+        <TouchableOpacity onPress={gotoSignUp}>
+          <Text style={styles.grouptext}>Sign Up</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={gotoLogin}>
+          <Text style={styles.grouptext}>Login</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -60,6 +73,7 @@ const styles = StyleSheet.create({
   footer: {
     backgroundColor: '#d2d6db',
     padding: 10,
+    paddingHorizontal: 20,
     flexDirection: 'row',
     width: '100%',
     borderTopWidth: 0.5,

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import {
   StyleSheet,
   Text,
@@ -11,17 +12,47 @@ import {
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
-import {useNavigation} from '@react-navigation/native';
+import {persistor} from '../redux/store';
+
+// import actions
+import authAction from '../redux/actions/auth';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
+
+// import components
+import AlertToasts from '../components/AlertToast';
+import LoadingModal from '../components/LoadingModal';
 
 const DrawerCustomContent = (props) => {
   //   const navigation = useNavigation();
   const closeDrawer = () => {
     props.navigation.toggleDrawer();
   };
+  const [signoutLoading, setSignoutLoading] = useState(false);
+  const [errorToast, setErrorToast] = useState('');
+  const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
+
+  const signOut = async () => {
+    setSignoutLoading(true);
+    try {
+      setSignoutLoading(false);
+      setErrorToast('Signout now');
+      setShow(true);
+      setTimeout(async () => {
+        setShow(false);
+        await persistor.purge();
+        await persistor.purge();
+        await persistor.flush();
+        await dispatch(authAction.logout());
+      }, 1000);
+    } catch (e) {}
+  }
+  
   return (
     <SafeAreaView style={styles.container}>
+      <LoadingModal requestLoading={signoutLoading} />
+      <AlertToasts visible={show} message={errorToast} />
       <View style={styles.top}>
         <Text style={styles.textLogo}>Ruang Dev Community</Text>
         <TouchableOpacity onPress={closeDrawer}>
@@ -43,7 +74,7 @@ const DrawerCustomContent = (props) => {
           icon={({size, color}) => (
             <Icon name="sign-out-alt" size={size} color="red" />
           )}
-          onPress={() => console.log('Log out')}
+          onPress={signOut}
         />
       </DrawerContentScrollView>
       <View style={styles.versions}>

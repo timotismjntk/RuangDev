@@ -31,6 +31,15 @@ const initialState = {
           pageInfo: action.payload.data.pageInfo,
         };
       }
+      case 'LOGOUT_USER': {
+        return {
+          data: [],
+          isLoading: false,
+          isError: false,
+          alertMsg: '',
+          pageInfo: {},
+        };
+      }
       default: {
         return state;
       }

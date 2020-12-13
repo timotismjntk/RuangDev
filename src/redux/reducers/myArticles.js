@@ -28,6 +28,14 @@ export default (state = initialState, action) => {
         data: action.payload.data.results,
       };
     }
+    case 'LOGOUT_USER': {
+      return {
+        data: [],
+        isLoading: false,
+        isError: false,
+        alertMsg: '',
+      };
+    }
     default: {
       return state;
     }

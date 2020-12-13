@@ -14,7 +14,7 @@ import AlertToasts from '../components/AlertToast';
 import LoadingModal from '../components/LoadingModal';
 import Footer from '../components/FooterAfterLogin';
 import EditingProfile from '../components/EditProfile';
-import AccountProfile from '../components/AccountProfile';
+import UpdatePassword from '../components/UpdatePassword';
 
 // import action
 import profileAction from '../redux/actions/profile';
@@ -80,7 +80,7 @@ const EditProfile = () => {
         </TouchableOpacity>
       </View>
       {selected === 'Profile' && <EditingProfile />}
-      {selected === 'Account' && <AccountProfile />}
+      {selected === 'Account' && <UpdatePassword />}
       <View style={styles.lineBorder} />
       <Footer />
     </ScrollView>

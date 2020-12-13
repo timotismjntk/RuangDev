@@ -52,7 +52,6 @@ const initialState = {
         };
       }
       case 'PATCH_PROFILE_FULFILLED': {
-        console.log(action.payload);
         return {
           ...state,
           isLoading: false,
@@ -71,6 +70,7 @@ const initialState = {
           ...state,
           isLoading: false,
           isError: true,
+          updated: false,
           alertMsg: 'There is an error at request data',
         };
       }
@@ -80,6 +80,7 @@ const initialState = {
           ...state,
           isLoading: false,
           alertMsg: 'Profile updated',
+          isError: false,
           updated: true,
         };
       }
@@ -166,6 +167,22 @@ const initialState = {
           isLoadingReset: false,
           isErrorReset: false,
           isReset: false,
+          alertMsgReset: '',
+        };
+      }
+      case 'LOGOUT_USER': {
+        return {
+          data: {},
+          isLoading: false,
+          isError: false,
+          alertMsg: '',
+          updated: false,
+          isLoadingUpdate: false,
+          isUploaded: false,
+          isDeleted: false,
+          isLoadingReset: false,
+          isReset: false,
+          isErrorReset: false,
           alertMsgReset: '',
         };
       }

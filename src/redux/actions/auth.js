@@ -4,7 +4,11 @@ import qs from 'qs';
 
 
 export default {
-  login: (email, password) => ((console.log(email)), {
+  signUp: (data) => ({
+    type: 'SIGNUP_USER',
+    payload: http().post('auth/signup/', qs.stringify(data)),
+  }),
+  login: (email, password) => ({
     type: 'AUTH_USER',
     payload: http().post('auth/login', qs.stringify({email, password})),
   }),

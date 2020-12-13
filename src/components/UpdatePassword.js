@@ -10,19 +10,18 @@ import {
 } from 'react-native';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import LoadingModal from '../components/LoadingModal';
+import LoadingModal from './LoadingModal';
 
 // import action
 import profileAction from '../redux/actions/profile';
 
-const AccountProfile = () => {
+const UpdatePassword = () => {
   const dispatch = useDispatch();
 
   const [shadow, setShadow] = useState('#B5BDC4');
   const [bottom, setBottom] = useState(1);
   const [bottom2, setBottom2] = useState(1);
   const [shadow2, setShadow2] = useState('#B5BDC4');
-  const [loading, setLoading] = useState(false);
 
   let styleCustom = {borderColor: shadow, borderBottomWidth: bottom};
   let styleCustom2 = {
@@ -39,35 +38,33 @@ const AccountProfile = () => {
     const data = {
       password: value.newPassword,
     };
-    setLoading(true);
     dispatch(profileAction.updatePassword(token, data)).catch((e) => {
       console.log(e.message);
     });
   };
 
   useEffect(() => {
-    if (updated) {
-      setLoading(false);
+    if (updated && !isLoading) {
       setTimeout(() => {
         dispatch(profileAction.removeMessage());
       }, 200);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updated]);
+  }, [updated && isLoading]);
 
   return (
     <View>
       <LoadingModal
         requestLoading={isLoading && !isError ? isLoading : false}
       />
-      <LoadingModal requestLoading={loading} />
       <Formik
         initialValues={{newPassword: '', repeatPassword: ''}}
         onSubmit={(values, formikActions) => {
           updatePassword(values);
           setTimeout(() => {
             formikActions.setSubmitting(false);
-          }, 500);
+            formikActions.resetForm({});
+          }, 2000);
         }}
         validationSchema={Yup.object().shape({
           newPassword: Yup.string()
@@ -80,7 +77,7 @@ const AccountProfile = () => {
               'confirm-password-test',
               'Password and Repeat password should match',
               function (value) {
-                return value === this.parent.repeatPassword;
+                return value === this.parent.newPassword;
               },
             ),
         })}>
@@ -142,7 +139,7 @@ const AccountProfile = () => {
   );
 };
 
-export default AccountProfile;
+export default UpdatePassword;
 
 const styles = StyleSheet.create({
   FormArea: {

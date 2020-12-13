@@ -39,6 +39,14 @@ export default (state = initialState, action) => {
         isSuccess: false,
       };
     }
+    case 'LOGOUT_USER': {
+      return {
+        alertMsg: '',
+        isError: false,
+        isLoading: false,
+        isSuccess: false,
+      };
+    }
     default: {
       return state;
     }
