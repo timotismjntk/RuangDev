@@ -23,6 +23,7 @@ import Moment from 'moment';
 
 // import actions
 import getDetailArticleAction from '../redux/actions/getDetailArticle';
+import likesAction from '../redux/actions/likes';
 
 // import components
 import LoadingModal from '../components/LoadingModal';
@@ -40,14 +41,29 @@ const DetailArticle = ({route, navigation}) => {
   const token = useSelector((state) => state.auth.token);
 
   useEffect(() => {
-    dispatch(getDetailArticleAction.getDetailArticles(token, id));
+    if (id) {
+      dispatch(getDetailArticleAction.getDetailArticles(token, id));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [id]);
 
   const article = useSelector((state) => state.getDetailArticle);
   const {data, isLoading, isError} = article;
 
   const profile = useSelector((state) => state.profile.data.results);
+
+  const postLikes = () => {
+    dispatch(likesAction.postLikes(token, {postId: id}));
+  };
+  const likesState = useSelector((state) => state.likes);
+  const {isLoading: isLoadingLike, isSuccess: isSuccessLike} = likesState;
+
+  useEffect(() => {
+    if (isSuccessLike && !isLoadingLike) {
+      dispatch(getDetailArticleAction.getDetailArticles(token, id));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessLike, isLoadingLike]);
 
   return (
     <>
@@ -119,26 +135,7 @@ const DetailArticle = ({route, navigation}) => {
             <Text style={{fontSize: 20}}>{data.content}</Text>
           </View>
         </View>
-        <View style={styles.commentSection}>
-          <Text style={styles.commentSectionTitle}>Discussion</Text>
-          <View style={styles.commentSectionInput}>
-            <View>
-              <TouchableOpacity style={styles.imageUser}>
-                <Thumbnail
-                  small
-                  source={
-                    profile.avatar
-                      ? {uri: API_URL + profile.avatar}
-                      : {
-                          uri: `https://ui-avatars.com/api/?size=50&name=${profile.fullname}`,
-                        }
-                  }
-                />
-              </TouchableOpacity>
-            </View>
-            <CommentComponent />
-          </View>
-        </View>
+        <CommentComponent />
         <View style={styles.lineBorder} />
         <View style={styles.readNext}>
           <ReadNext />
@@ -150,8 +147,12 @@ const DetailArticle = ({route, navigation}) => {
         <Footer />
       </ScrollView>
       <View style={styles.btmNav}>
-        <TouchableOpacity style={styles.btn} onPress={() => setLike(!like)}>
-          <Icon name={like ? 'heart' : 'heart-outline'} size={25} color="red" />
+        <TouchableOpacity style={styles.btn} onPress={() => postLikes()}>
+          <Icon
+            name={data.isLiked !== null ? 'heart' : 'heart-outline'}
+            size={25}
+            color="red"
+          />
           <Text style={styles.likesCount}>
             {data.likesCount > 0 ? data.likesCount : 0}
           </Text>

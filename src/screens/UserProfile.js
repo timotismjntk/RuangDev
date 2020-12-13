@@ -71,6 +71,9 @@ const Header = () => {
   );
 };
 
+/* why i create like this because to warning from flatlist, cannot combined
+   flatlist inside scrollview*/
+
 const UserProfile = () => {
   return (
     <View>

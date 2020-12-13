@@ -1,5 +1,4 @@
 const initialState = {
-  data: [],
   isLoading: false,
   isError: false,
   alertMsg: '',
@@ -8,34 +7,13 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case 'GET_COMMENT_PENDING': {
+    case 'POST_LIKES_PENDING': {
       return {
         ...state,
         isLoading: true,
       };
     }
-    case 'GET_COMMENT_REJECTED': {
-      return {
-        ...state,
-        isLoading: false,
-        isError: true,
-        alertMsg: 'There is an error at request data',
-      };
-    }
-    case 'GET_COMMENT_FULFILLED': {
-      return {
-        ...state,
-        isLoading: false,
-        data: action.payload.data.results,
-      };
-    }
-    case 'POST_COMMENT_PENDING': {
-      return {
-        ...state,
-        isLoading: true,
-      };
-    }
-    case 'POST_COMMENT_REJECTED': {
+    case 'POST_LIKES_REJECTED': {
       return {
         ...state,
         isLoading: false,
@@ -44,7 +22,7 @@ export default (state = initialState, action) => {
         alertMsg: action.payload.data.error,
       };
     }
-    case 'POST_COMMENT_FULFILLED': {
+    case 'POST_LIKES_FULFILLED': {
       return {
         ...state,
         isLoading: false,

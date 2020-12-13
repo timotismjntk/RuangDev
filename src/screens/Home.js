@@ -146,7 +146,7 @@ const Home = (props) => {
                   size={20}
                   style={{marginRight: 10}}
                 />
-                <Text>{item.Likes[0] ? item.Likes[0].likesCount : 0}</Text>
+                <Text>{item.Likes ? item.Likes.length : 0}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={{flexDirection: 'row'}}>
                 <Icon
@@ -154,9 +154,7 @@ const Home = (props) => {
                   size={20}
                   style={{marginRight: 10}}
                 />
-                <Text>
-                  {item.Comments[0] ? item.Comments[0].commentsCount : 0}
-                </Text>
+                <Text>{item.Comments ? item.Comments.length : 0}</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.estimatedWrap}>
