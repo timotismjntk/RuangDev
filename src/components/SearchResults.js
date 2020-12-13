@@ -128,7 +128,7 @@ const SearchResults = (props) => {
                   size={20}
                   style={{marginRight: 10}}
                 />
-                <Text>{item.Likes[0] ? item.Likes[0].likesCount : 0}</Text>
+                <Text>{item.Likes ? item.Likes.length : 0}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={{flexDirection: 'row'}}>
                 <Icon
@@ -136,7 +136,7 @@ const SearchResults = (props) => {
                   size={20}
                   style={{marginRight: 10}}
                 />
-                <Text>10</Text>
+                <Text>{item.Comments ? item.Comments.length : 0}</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.estimatedWrap}>
@@ -246,13 +246,14 @@ const styles = StyleSheet.create({
   },
   tagsWrap: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     paddingRight: 10,
     marginBottom: 10,
     flexWrap: 'wrap',
   },
   tags: {
     color: 'grey',
+    marginRight: 5,
+    marginBottom: 5,
   },
   likecomment: {
     flexDirection: 'row',

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {
   View,
@@ -9,17 +9,17 @@ import {
 } from 'react-native';
 import {Thumbnail} from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import UserArticle from '../components/UserArticle';
-import Footer from '../components/FooterAfterLogin';
 import Moment from 'moment';
 import {API_URL} from '@env';
+import {useNavigation} from '@react-navigation/native';
 
 // import components
 import LoadingModal from '../components/LoadingModal';
-import {useNavigation} from '@react-navigation/native';
+import AuthorArticle from '../components/AuthorArticle';
+import Footer from '../components/FooterAfterLogin';
 
 const Header = () => {
-  const profile = useSelector((state) => state.profile.data.results);
+  const author = useSelector((state) => state.getDetailArticle.data.Authors);
   const navigation = useNavigation();
 
   const navigateToEditProfile = () => {
@@ -31,22 +31,22 @@ const Header = () => {
       <TouchableOpacity style={styles.imageAuthor}>
         <Thumbnail
           source={
-            profile
-              ? profile.avatar
-                ? {uri: API_URL + profile.avatar}
+            author
+              ? author.avatar
+                ? {uri: API_URL + author.avatar}
                 : {
                     uri: `https://ui-avatars.com/api/?size=60&name=${
-                      profile ? profile.fullname : 'Anon'
+                      author ? author.fullname : 'Anon'
                     }`,
                   }
               : {
                   uri: `https://ui-avatars.com/api/?size=60&name=${
-                    profile ? profile.fullname : 'Anon'
+                    author ? author.fullname : 'Anon'
                   }`,
                 }
           }
         />
-        <Text style={styles.name}>{profile ? profile.fullname : 'Anon'}</Text>
+        <Text style={styles.name}>{author ? author.fullname : 'Anon'}</Text>
       </TouchableOpacity>
       <View style={styles.bio}>
         <Text style={styles.biotext}>404 bio not found</Text>
@@ -55,20 +55,20 @@ const Header = () => {
         <Icon name="cake" size={25} color="grey" />
         <Text style={styles.joinText}>Joined on</Text>
         <Text style={styles.joinText}>
-          {profile ? Moment(profile.createdAt).format('LL') : ''}
+          {author ? Moment(author.createdAt).format('LL') : ''}
         </Text>
         <TouchableOpacity style={styles.github}>
           <Icon name="github" size={25} color="grey" />
         </TouchableOpacity>
       </View>
       <View style={styles.btnWrap}>
-        <TouchableOpacity style={styles.btn} onPress={navigateToEditProfile}>
-          <Text style={styles.btnText}>Edit profile</Text>
+        <TouchableOpacity style={styles.btn} disabled={true}>
+          <Text style={styles.btnText}>Follow</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.lineBorder2} />
-      <View style={styles.myArticle}>
-        <Text style={styles.title}>My article</Text>
+      <View style={styles.articles}>
+        <Text style={styles.title}>Article collection</Text>
         <View style={styles.underline} />
       </View>
     </View>
@@ -78,16 +78,17 @@ const Header = () => {
 /* why i create like this because to warning from flatlist, cannot combined
    flatlist inside scrollview */
 
-const UserProfile = () => {
+const AuthorProfileDetail = (props) => {
+  const {id} = props.route.params;
   return (
     <View>
       <LoadingModal duration={450} />
-      <UserArticle header={<Header />} footer={<Footer />} />
+      <AuthorArticle id={id} header={<Header />} footer={<Footer />} />
     </View>
   );
 };
 
-export default UserProfile;
+export default AuthorProfileDetail;
 
 const styles = StyleSheet.create({
   lineBorder: {
@@ -156,7 +157,7 @@ const styles = StyleSheet.create({
   github: {
     marginLeft: 10,
   },
-  myArticle: {
+  articles: {
     marginTop: 10,
     paddingLeft: 10,
   },

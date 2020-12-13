@@ -11,6 +11,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Thumbnail} from 'native-base';
 import Moment from 'moment';
+import jwt_decode from 'jwt-decode';
 
 // import component
 import DropDownPicker from '../components/DropDownPicker';
@@ -20,6 +21,7 @@ import LoadingModal from '../components/LoadingModal';
 import articleAction from '../redux/actions/getArticles';
 import profileAction from '../redux/actions/profile';
 import loginAction from '../redux/actions/auth';
+import getDetailArticleAction from '../redux/actions/getDetailArticle';
 
 import {API_URL} from '@env';
 
@@ -94,7 +96,23 @@ const Home = (props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageInfo]);
-  console.log(storeData);
+
+  const {id: userId} = jwt_decode(token);
+
+  const viewAuthorProfile = async (authorId, postId) => {
+    if (userId === authorId) {
+      props.navigation.navigate('UserProfile');
+    } else {
+      try {
+        await dispatch(getDetailArticleAction.getDetailArticles(token, postId));
+        props.navigation.navigate('AuthorProfileDetail', {
+          id: authorId,
+        });
+      } catch (e) {
+        console.log(e.message);
+      }
+    }
+  };
 
   const newsItem = ({item, onPress, style}) => (
     <TouchableOpacity
@@ -110,7 +128,9 @@ const Home = (props) => {
         <Image source={{uri: API_URL + item.newsimage}} style={styles.image} />
       ) : null}
       <View style={styles.articlewrap}>
-        <TouchableOpacity style={styles.imageContainer}>
+        <TouchableOpacity
+          style={styles.imageContainer}
+          onPress={() => viewAuthorProfile(item.Authors.id, item.id)}>
           <Thumbnail
             small
             source={

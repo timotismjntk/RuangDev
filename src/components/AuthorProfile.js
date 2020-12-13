@@ -4,6 +4,8 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Thumbnail} from 'native-base';
 import {API_URL} from '@env';
 import jwt_decode from 'jwt-decode';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Moment from 'moment';
 
 const AuthorProfile = (props) => {
   const token = useSelector((state) => state.auth.token);
@@ -13,28 +15,40 @@ const AuthorProfile = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.lineBorder} />
-      <TouchableOpacity style={styles.imageAuthor}>
-        <Thumbnail
-          source={
-            data
-              ? data
-                ? {uri: API_URL + data.avatar}
+      <View style={styles.authorWrap}>
+        <TouchableOpacity style={styles.imageAuthor}>
+          <Thumbnail
+            source={
+              data
+                ? data
+                  ? {uri: API_URL + data.avatar}
+                  : {
+                      uri: `https://ui-avatars.com/api/?size=50&name=${
+                        data ? data.fullname : 'guest'
+                      }`,
+                    }
                 : {
                     uri: `https://ui-avatars.com/api/?size=50&name=${
                       data ? data.fullname : 'guest'
                     }`,
                   }
-              : {
-                  uri: `https://ui-avatars.com/api/?size=50&name=${
-                    data ? data.fullname : 'guest'
-                  }`,
-                }
-          }
-        />
+            }
+          />
+        </TouchableOpacity>
         <Text style={styles.name}>{data && data.fullname}</Text>
-      </TouchableOpacity>
+      </View>
       <View style={styles.bio}>
         <Text style={styles.biotext}>404 Bio not found!</Text>
+      </View>
+      <View style={styles.joined}>
+        <Icon name="cake" size={25} color="grey" />
+        <Text style={styles.joinText}>Joined on</Text>
+        <Text style={styles.joinText}>
+          {data ? Moment(data.createdAt).format('LL') : ''}
+        </Text>
+        <TouchableOpacity style={styles.github}>
+          <Icon name="github" size={25} color="grey" />
+        </TouchableOpacity>
       </View>
       {data && userId !== data.id && (
         <View style={styles.btnWrap}>
@@ -43,10 +57,6 @@ const AuthorProfile = (props) => {
           </TouchableOpacity>
         </View>
       )}
-      <View style={styles.joined}>
-        <Text style={styles.joinText}>JOINED</Text>
-        <Text style={styles.joinText}>Jul 30, 2019</Text>
-      </View>
     </View>
   );
 };
@@ -69,27 +79,42 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     zIndex: 5,
   },
+  authorWrap: {
+    flexDirection: 'row',
+  },
   imageAuthor: {
     paddingHorizontal: 10,
     position: 'relative',
-    flexDirection: 'row',
-    alignItems: 'center',
     zIndex: 5,
     top: -15,
   },
   name: {
-    marginLeft: 10,
+    marginLeft: 5,
     marginTop: 15,
     fontSize: 25,
     fontWeight: 'bold',
+    top: -15,
   },
   bio: {
     paddingHorizontal: 10,
   },
   biotext: {
     fontSize: 15,
-    color: 'grey',
+    color: 'black',
     lineHeight: 25,
+  },
+  joined: {
+    marginVertical: 20,
+    paddingHorizontal: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  joinText: {
+    color: 'grey',
+    marginLeft: 10,
+  },
+  github: {
+    marginLeft: 10,
   },
   btnWrap: {
     marginVertical: 15,
@@ -106,11 +131,5 @@ const styles = StyleSheet.create({
   btnText: {
     color: 'white',
     fontWeight: 'bold',
-  },
-  joined: {
-    paddingHorizontal: 10,
-  },
-  joinText: {
-    color: 'grey',
   },
 });

@@ -7,6 +7,7 @@ import Home from '../screens/Home';
 import DetailArticle from '../screens/DetailArticle';
 import UserProfile from '../screens/UserProfile';
 import EditProfile from '../screens/EditProfile';
+import AuthorProfileDetail from '../screens/AuthorProfileDetail';
 import CreateNewsArticle from '../screens/CreateNewsArticle';
 import SearchNews from '../screens/SearchNews';
 
@@ -59,6 +60,18 @@ const MainStack = () => {
       <Stack.Screen
         name="EditProfile"
         component={EditProfile}
+        options={{
+          headerStyle: {
+            shadowOpacity: 0,
+          },
+          headerRight: () => <HeaderRight />,
+          headerLeft: () => <HeaderLeft />,
+          headerTitle: '',
+        }}
+      />
+      <Stack.Screen
+        name="AuthorProfileDetail"
+        component={AuthorProfileDetail}
         options={{
           headerStyle: {
             shadowOpacity: 0,
