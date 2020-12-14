@@ -40,13 +40,14 @@ const DrawerCustomContent = (props) => {
       setSignoutLoading(false);
       setErrorToast('Signout now');
       setShow(true);
-      SplashScreen.show();
+      SplashScreen.hide();
       setTimeout(async () => {
         setShow(false);
         await persistor.purge();
         await persistor.purge();
         await persistor.flush();
         await dispatch(authAction.logout());
+        SplashScreen.hide();
       }, 1000);
     } catch (e) {}
   };

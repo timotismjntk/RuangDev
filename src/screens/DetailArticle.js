@@ -43,7 +43,8 @@ const DetailArticle = ({route, navigation}) => {
 
   useEffect(() => {
     if (id) {
-      dispatch(getDetailArticleAction.getDetailArticles(token, id));
+      console.log(id)
+      dispatch(getDetailArticleAction.getDetailArticles(token, Number(id)));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);

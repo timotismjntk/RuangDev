@@ -55,8 +55,6 @@ const SignUp = (props) => {
     borderBottomWidth: bottom3,
     marginBottom: 10,
   };
-  let emailInput = null;
-  let fullnameInput = null;
   const [chosenDate, setDate] = useState(new Date());
 
   const selectGenderMale = () => {
@@ -186,9 +184,6 @@ const SignUp = (props) => {
                 }}
                 placeholder="Fullname"
                 style={[styles.input, styleCustom]}
-                onSubmitEditing={() => {
-                  fullnameInput.focus();
-                }}
               />
               {prop.touched.fullname && prop.errors.fullname ? (
                 <Text style={styles.error}>{prop.errors.fullname}</Text>
@@ -250,9 +245,6 @@ const SignUp = (props) => {
                   styleCustom2,
                   isError && {borderColor: 'red', borderWidth: 3},
                 ]}
-                onSubmitEditing={() => {
-                  emailInput.focus();
-                }}
               />
               {prop.touched.email && prop.errors.email ? (
                 <Text style={styles.error}>{prop.errors.email}</Text>
@@ -272,7 +264,6 @@ const SignUp = (props) => {
                 }}
                 placeholder="Password"
                 style={[styles.input, styleCustom3]}
-                ref={(el) => (emailInput = el)}
                 secureTextEntry={true}
               />
               {prop.touched.password && prop.errors.password ? (

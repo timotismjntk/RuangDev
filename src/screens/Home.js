@@ -67,8 +67,12 @@ const Home = (props) => {
   const token = useSelector((state) => state.auth.token);
 
   useEffect(() => {
-    dispatch(articleAction.getArticles(token));
-    dispatch(profileAction.getProfile(token));
+    dispatch(articleAction.getArticles(token)).catch((e) => {
+      console.log(e.message);
+    });
+    dispatch(profileAction.getProfile(token)).catch((e) => {
+      console.log(e.message);
+    });
     dispatch(loginAction.clearMessage());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

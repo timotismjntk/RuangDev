@@ -50,6 +50,7 @@ const Login = (props) => {
   useEffect(() => {
     dispatch(resetPasswordAction.removeMessage());
     SplashScreen.hide();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const check =
