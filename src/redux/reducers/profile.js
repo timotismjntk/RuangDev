@@ -152,7 +152,7 @@ const initialState = {
         return {
           ...state,
           isLoadingReset: false,
-          isErrorReset: true,
+          isErrorReset: false,
           isReset: true,
           alertMsgReset: action.payload.data.message,
         };

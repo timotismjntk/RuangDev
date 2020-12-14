@@ -26,4 +26,12 @@ export default {
     type: 'CHECK_REFRESH_TOKEN',
     payload: http(token).post('auth/verify/token'),
   }),
+  getResetCode: (email) => ({
+    type: 'GET_RESET_CODE',
+    payload: http().post('auth/reset', qs.stringify({email})),
+  }),
+  verifyResetCode: (email, resetCode) => ({
+    type: 'VERIFY_RESET_CODE',
+    payload: http().post('auth/verify/reset', qs.stringify({email, resetCode})),
+  }),
 };

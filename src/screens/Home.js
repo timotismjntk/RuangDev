@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Thumbnail} from 'native-base';
 import Moment from 'moment';
 import jwt_decode from 'jwt-decode';
+import PushNotification from 'react-native-push-notification';
 
 // import component
 import DropDownPicker from '../components/DropDownPicker';
@@ -25,12 +26,33 @@ import getDetailArticleAction from '../redux/actions/getDetailArticle';
 
 import {API_URL} from '@env';
 
+PushNotification.createChannel(
+  {
+    channelId: 'dChat',
+    channelName: 'dChat Notification Channel',
+    channelDescription: 'dChatNotification',
+    soundName: 'default',
+    importance: 4,
+    vibrate: true,
+  },
+  (created) => console.log(`createdChannel returned '${created}'`),
+);
+
 const Home = (props) => {
   const [openModal, setOpenModal] = useState(false);
   const dispatch = useDispatch();
   const [storeData, setStoreData] = useState([]);
   const [select, setSelect] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+
+  useEffect(() => {
+    PushNotification.localNotification({
+      channelId: 'dChat',
+      title: 'Hola',
+      message: 'Welcome to dChat',
+    });
+  }, []);
+
   const detailItems = (itemId) => {
     setSelect(true);
     setTimeout(() => {

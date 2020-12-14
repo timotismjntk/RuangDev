@@ -7,6 +7,10 @@ const initialState = {
   isLoading: false,
   isExpired: false,
   isLoadingExpired: false,
+  isMatch: false,
+  isVerify: false,
+  isErrorVerify: false,
+  resetCodeData: {},
 };
 
 export default (state = initialState, action) => {
@@ -84,6 +88,54 @@ export default (state = initialState, action) => {
         alertMsg: action.payload.data.message,
       };
     }
+    case 'GET_RESET_CODE_PENDING': {
+      return {
+        ...state,
+        isLoading: true,
+        alertMsg: '',
+      };
+    }
+    case 'GET_RESET_CODE_REJECTED': {
+      return {
+        ...state,
+        isMatch: false,
+        isLoading: false,
+        isErrorResetCode: true,
+        alertMsg: action.payload.response.data.message,
+      };
+    }
+    case 'GET_RESET_CODE_FULFILLED': {
+      return {
+        ...state,
+        isMatch: true,
+        isLoading: false,
+        isVerify: false,
+        resetCodeData: action.payload.data.result,
+      };
+    }
+    case 'VERIFY_RESET_CODE_PENDING': {
+      return {
+        ...state,
+        isVerify: false,
+        isErrorVerify: false,
+      };
+    }
+    case 'VERIFY_RESET_CODE_REJECTED': {
+      return {
+        ...state,
+        isVerify: false,
+        isErrorVerify: true,
+        alertMsg: action.payload.response.data.message,
+      };
+    }
+    case 'VERIFY_RESET_CODE_FULFILLED': {
+      return {
+        ...state,
+        isVerify: true,
+        isErrorVerify: false,
+        resetCodeData: action.payload.data.result,
+      };
+    }
     case 'persist/REHYDRATED': {
       return {
         ...state,
@@ -108,6 +160,10 @@ export default (state = initialState, action) => {
         alertMsg: '',
         isSuccess: false,
         isLoading: false,
+        isMatch: false,
+        isErrorResetCode: false,
+        resetCodeData: {},
+        isErrorVerify: false,
       };
     }
     default: {

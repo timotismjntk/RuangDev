@@ -94,7 +94,9 @@ const SendComment = () => {
 
   useEffect(() => {
     if (id) {
-      dispatch(commentsActions.getComments(token, id));
+      dispatch(commentsActions.getComments(token, id)).catch((e) => {
+        console.log(e.message);
+      });
     }
   }, [id]);
 
@@ -107,7 +109,9 @@ const SendComment = () => {
     };
     setValueText('');
     console.log(data);
-    dispatch(commentsActions.postComment(token, data));
+    dispatch(commentsActions.postComment(token, data)).catch((e) => {
+      console.log(e.message);
+    });
   };
 
   const commentState = useSelector((state) => state.comments);
@@ -115,7 +119,9 @@ const SendComment = () => {
 
   useEffect(() => {
     if (isSuccess && !isLoading) {
-      dispatch(commentsActions.getComments(token, id));
+      dispatch(commentsActions.getComments(token, id)).catch((e) => {
+        console.log(e.message);
+      });
       setTimeout(() => {
         dispatch(articleAction.getArticles(token)).catch((e) => {
           console.log(e.message);

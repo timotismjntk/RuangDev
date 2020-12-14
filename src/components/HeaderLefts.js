@@ -15,7 +15,9 @@ const HeaderLefts = (props) => {
   const token = useSelector((state) => state.auth.token);
 
   const navigateToHome = () => {
-    dispatch(articleAction.getArticles(token));
+    dispatch(articleAction.getArticles(token)).catch((e) => {
+      console.log(e.message);
+    });
     navigation.navigate('Home');
   };
 

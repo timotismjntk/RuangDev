@@ -23,6 +23,7 @@ import Smug from '../assets/smug.png';
 import Anonymous from '../assets/anonymous.png';
 
 import loginAction from '../redux/actions/auth';
+import resetPasswordAction from '../redux/actions/profile';
 
 const Login = (props) => {
   const [email, setEmail] = useState('');
@@ -47,6 +48,7 @@ const Login = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(resetPasswordAction.removeMessage());
     SplashScreen.hide();
   }, []);
 

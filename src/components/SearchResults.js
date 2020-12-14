@@ -37,7 +37,11 @@ const SearchResults = (props) => {
 
   useEffect(() => {
     if (props.request) {
-      dispatch(searchArticleAction.searchArticles(token, props.search));
+      dispatch(searchArticleAction.searchArticles(token, props.search)).catch(
+        (e) => {
+          console.log(e.message);
+        },
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.request]);

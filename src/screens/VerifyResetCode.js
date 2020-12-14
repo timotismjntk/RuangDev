@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {
   View,
@@ -8,6 +8,7 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  Keyboard,
 } from 'react-native';
 import {Formik, ErrorMessage} from 'formik';
 import * as Yup from 'yup';
@@ -15,115 +16,125 @@ import Footer from '../components/FooterBeforeLogin';
 import AlertToasts from '../components/AlertToast';
 import LoadingModal from '../components/LoadingModal';
 
-// import action
-import loginAction from '../redux/actions/auth';
+//import actions
+import authAction from '../redux/actions/auth';
 
-const ForgotPassword = (props) => {
+const VerifyResetCode = (props) => {
   const [shadow, setShadow] = useState('#B5BDC4');
   const [bottom, setBottom] = useState(1);
-  const [email, setEmail] = useState('');
-  const dispatch = useDispatch();
-  const [alertMessage, setAlertMessage] = useState('');
-  const [show, setShow] = useState(false);
   let styleCustom = {borderColor: shadow, borderBottomWidth: bottom};
+  const [verification, setVerification] = useState('');
+  const [error, SetError] = useState(false);
+  const [show, setShow] = useState(false);
+  const [showVerifyError, setShowVerifyError] = useState(false);
+  const [alert, setAlert] = useState('');
+  const {reset, email} = props.route.params;
 
-  const sendResetCode = async (value) => {
+  useEffect(() => {
+    if (reset) {
+      setAlert(`Masukkan kode berikut: ${reset}`);
+      setShow(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const dispatch = useDispatch();
+
+  const authState = useSelector((state) => state.auth);
+  const {isVerify, isErrorVerify, isLoading, alertMsg} = authState;
+
+  const verify = async (value) => {
+    console.log(value);
+    Keyboard.dismiss();
     try {
-      setEmail(value);
-      await dispatch(loginAction.getResetCode(value)).catch((e) => {
-        console.log(e.message);
-      });
+      await dispatch(authAction.verifyResetCode(email, value));
     } catch (err) {
       console.log(err.message);
     }
   };
-  const authState = useSelector((state) => state.auth);
-  const {
-    resetCodeData,
-    isMatch,
-    isErrorResetCode,
-    alertMsg,
-    isLoading,
-  } = authState;
 
   useEffect(() => {
-    if (isMatch) {
-      props.navigation.navigate('VerifyResetCode', {
-        reset: resetCodeData,
-        email: email,
-      });
+    if (isVerify) {
+      setShow(false);
+      setAlert('');
+      dispatch(authAction.clearMessage());
+      props.navigation.navigate('ResetPassword', {email: email});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMatch]);
+  }, [isVerify]);
 
   useEffect(() => {
-    if (isErrorResetCode && !isLoading) {
-      if (!isLoading) {
-        setTimeout(() => {
-          setAlertMessage(alertMsg);
-          setShow(true);
-        }, 1500);
-        setTimeout(() => {
-          setAlertMessage('');
-          setShow(false);
-          dispatch(loginAction.clearMessage());
-        }, 3500);
-      }
+    if (isErrorVerify) {
+      setShowVerifyError(true);
+      setTimeout(() => {
+        setShowVerifyError(false);
+        dispatch(authAction.clearMessage());
+      }, 1200);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isErrorResetCode, isLoading]);
+  }, [isErrorVerify]);
 
   return (
     <View style={{justifyContent: 'space-between', flex: 1}}>
-      <LoadingModal requestLoading={isLoading} />
-      <AlertToasts visible={show} message={alertMessage} />
+      <LoadingModal duration={2500} />
+      <LoadingModal
+        requestLoading={isLoading && !isErrorVerify ? isLoading : false}
+      />
+      <AlertToasts visible={show} message={alert} />
+      <AlertToasts
+        position={250}
+        visible={showVerifyError}
+        message={alertMsg}
+      />
       <View style={styles.container}>
         <View style={styles.parent}>
-          <Text style={styles.title}>Forgot your password?</Text>
+          <Text style={styles.title}>Enter your verification code</Text>
         </View>
         <Formik
-          initialValues={{email: ''}}
+          initialValues={{verification: ''}}
           validationSchema={Yup.object({
-            email: Yup.string().email('Invalid Email').required('Required'),
+            verification: Yup.string().required('Required'),
           })}
           onSubmit={(values, formikActions) => {
-            sendResetCode(values.email);
+            verify(values.verification);
             setTimeout(() => {
               formikActions.setSubmitting(false);
-            }, 100);
+            }, 500);
           }}>
           {(prop) => (
             <KeyboardAvoidingView style={{width: '100%'}}>
-              <Text style={styles.email}>Email</Text>
+              <Text style={styles.verification}>Verification</Text>
               <TextInput
-                onChangeText={prop.handleChange('email')}
+                onChangeText={prop.handleChange('verification')}
                 onBlur={() => {
-                  prop.handleBlur('email');
+                  prop.handleBlur('verification');
                   setShadow('#B5BDC4');
                   setBottom(1);
                 }}
-                value={prop.values.email}
+                value={prop.values.verification}
                 onFocus={() => {
                   setShadow('#3B49DF');
                   setBottom(4);
                 }}
-                placeholder="Email"
+                placeholder="Verification"
                 style={[styles.input, styleCustom]}
               />
-              {prop.touched.email && prop.errors.email ? (
-                <Text style={styles.error}>{prop.errors.email}</Text>
+              {prop.touched.verification && prop.errors.verification ? (
+                <Text style={styles.error}>{prop.errors.verification}</Text>
               ) : null}
               <TouchableOpacity
                 onPress={prop.handleSubmit}
                 disabled={
-                  prop.touched.email && prop.errors.email ? true : false
+                  prop.touched.verification && prop.errors.verification
+                    ? true
+                    : false
                 }
                 style={[
                   styles.btnsubmit,
-                  prop.touched.email &&
-                    prop.errors.email && {backgroundColor: 'grey'},
+                  prop.touched.verification &&
+                    prop.errors.verification && {backgroundColor: 'grey'},
                 ]}>
-                <Text style={styles.textsubmit}>Send me reset code</Text>
+                <Text style={styles.textsubmit}>Submit</Text>
               </TouchableOpacity>
             </KeyboardAvoidingView>
           )}
@@ -134,7 +145,7 @@ const ForgotPassword = (props) => {
   );
 };
 
-export default ForgotPassword;
+export default VerifyResetCode;
 
 const styles = StyleSheet.create({
   container: {
@@ -153,7 +164,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
   },
-  email: {
+  verification: {
     fontSize: 15,
   },
   form: {

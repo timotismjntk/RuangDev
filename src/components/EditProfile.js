@@ -84,7 +84,9 @@ const EditProfile = () => {
   useEffect(() => {
     if (updated) {
       setTimeout(() => {
-        dispatch(profileAction.getProfile(token));
+        dispatch(profileAction.getProfile(token)).catch((e) => {
+          console.log(e.message);
+        });
         dispatch(profileAction.removeMessage());
       }, 200);
     }

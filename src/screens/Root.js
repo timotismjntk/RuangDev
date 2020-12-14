@@ -10,6 +10,8 @@ import Login from '../screens/Login';
 import SignUp from '../screens/Signup';
 import LandingScreen from '../screens/LandingScreen';
 import ForgotPassword from '../screens/ForgotPassword';
+import VerifyResetCode from '../screens/VerifyResetCode';
+import ResetPassword from '../screens/ResetPassword';
 
 // import stack
 import MainStack from '../screens/MainStack';
@@ -71,6 +73,16 @@ const Root = () => {
           <Stack.Screen
             name="ForgotPassword"
             component={ForgotPassword}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="VerifyResetCode"
+            component={VerifyResetCode}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ResetPassword"
+            component={ResetPassword}
             options={{headerShown: false}}
           />
         </Stack.Navigator>

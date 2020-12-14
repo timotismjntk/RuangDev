@@ -61,7 +61,11 @@ const DetailArticle = ({route, navigation}) => {
 
   useEffect(() => {
     if (isSuccessLike && !isLoadingLike) {
-      dispatch(getDetailArticleAction.getDetailArticles(token, id));
+      dispatch(getDetailArticleAction.getDetailArticles(token, id)).catch(
+        (e) => {
+          console.log(e.message);
+        },
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessLike, isLoadingLike]);
@@ -123,7 +127,8 @@ const DetailArticle = ({route, navigation}) => {
                           },
                         ]}
                         key={el.id.toString()}>
-                        <Text style={{color: 'grey'}}>#</Text>{el.name}
+                        <Text style={{color: 'grey'}}>#</Text>
+                        {el.name}
                       </Text>
                     </TouchableOpacity>
                   );
@@ -178,9 +183,9 @@ const DetailArticle = ({route, navigation}) => {
         </View>
         <CommentComponent />
         <View style={styles.lineBorder} />
-        <View style={styles.readNext}>
+        {/* <View style={styles.readNext}>
           <ReadNext />
-        </View>
+        </View> */}
         <View style={styles.lineBorder} />
         <View style={styles.author}>
           <AuthorProfile data={data.Authors} />

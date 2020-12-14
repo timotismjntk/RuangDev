@@ -147,7 +147,7 @@ const SignUp = (props) => {
             <Text style={styles.textlink}>
               Already have an account?
               {'\n'}
-              <TouchableOpacity style={styles.signoptions}>
+              <TouchableOpacity style={styles.signoptions} disabled={true}>
                 <Text style={styles.textsignoptions}>
                   View more sign in options
                 </Text>
@@ -169,17 +169,17 @@ const SignUp = (props) => {
               formikActions.setSubmitting(false);
             }, 500);
           }}>
-          {(props) => (
+          {(prop) => (
             <KeyboardAvoidingView style={{width: '100%'}}>
               <Text style={styles.fullname}>Fullname</Text>
               <TextInput
-                onChangeText={props.handleChange('fullname')}
+                onChangeText={prop.handleChange('fullname')}
                 onBlur={() => {
-                  props.handleBlur('fullname');
+                  prop.handleBlur('fullname');
                   setShadow('#B5BDC4');
                   setBottom(1);
                 }}
-                value={props.values.fullname}
+                value={prop.values.fullname}
                 onFocus={() => {
                   setShadow('#3B49DF');
                   setBottom(4);
@@ -190,8 +190,8 @@ const SignUp = (props) => {
                   fullnameInput.focus();
                 }}
               />
-              {props.touched.fullname && props.errors.fullname ? (
-                <Text style={styles.error}>{props.errors.fullname}</Text>
+              {prop.touched.fullname && prop.errors.fullname ? (
+                <Text style={styles.error}>{prop.errors.fullname}</Text>
               ) : null}
               <Text style={{marginTop: 10}}>BirthDate</Text>
               <View style={styles.inputDate}>
@@ -233,13 +233,13 @@ const SignUp = (props) => {
               </View>
               <Text style={styles.email}>Email</Text>
               <TextInput
-                onChangeText={props.handleChange('email')}
+                onChangeText={prop.handleChange('email')}
                 onBlur={() => {
-                  props.handleBlur('email');
+                  prop.handleBlur('email');
                   setShadow2('#B5BDC4');
                   setBottom2(1);
                 }}
-                value={props.values.email}
+                value={prop.values.email}
                 onFocus={() => {
                   setShadow2('#3B49DF');
                   setBottom2(4);
@@ -254,18 +254,18 @@ const SignUp = (props) => {
                   emailInput.focus();
                 }}
               />
-              {props.touched.email && props.errors.email ? (
-                <Text style={styles.error}>{props.errors.email}</Text>
+              {prop.touched.email && prop.errors.email ? (
+                <Text style={styles.error}>{prop.errors.email}</Text>
               ) : null}
               <Text style={styles.password}>Password</Text>
               <TextInput
-                onChangeText={props.handleChange('password')}
+                onChangeText={prop.handleChange('password')}
                 onBlur={() => {
-                  props.handleBlur('password');
+                  prop.handleBlur('password');
                   setShadow3('#B5BDC4');
                   setBottom3(1);
                 }}
-                value={props.values.password}
+                value={prop.values.password}
                 onFocus={() => {
                   setShadow3('#3B49DF');
                   setBottom3(4);
@@ -275,15 +275,30 @@ const SignUp = (props) => {
                 ref={(el) => (emailInput = el)}
                 secureTextEntry={true}
               />
-              {props.touched.password && props.errors.password ? (
-                <Text style={styles.error}>{props.errors.password}</Text>
+              {prop.touched.password && prop.errors.password ? (
+                <Text style={styles.error}>{prop.errors.password}</Text>
               ) : null}
               <TouchableOpacity
-                onPress={props.handleSubmit}
-                mode="contained"
-                loading={props.isSubmitting}
-                disabled={props.isSubmitting}
-                style={styles.btnsubmit}>
+                onPress={prop.handleSubmit}
+                disabled={
+                  prop.touched.fullname &&
+                  prop.errors.fullname &&
+                  prop.touched.email &&
+                  prop.errors.email &&
+                  prop.touched.password &&
+                  prop.errors.password
+                    ? true
+                    : false
+                }
+                style={[
+                  styles.btnsubmit,
+                  prop.touched.fullname &&
+                    prop.errors.fullname &&
+                    prop.touched.email &&
+                    prop.errors.email &&
+                    prop.touched.password &&
+                    prop.errors.password && {backgroundColor: 'grey'},
+                ]}>
                 <Text style={styles.textsubmit}>Signup</Text>
               </TouchableOpacity>
             </KeyboardAvoidingView>
@@ -293,7 +308,7 @@ const SignUp = (props) => {
           Open Source <Image source={Smug} style={styles.image} />. Free Forever{' '}
           <Icon name="heart" color="red" size={25} />
         </Text>
-        <Text>
+        <Text style={{textAlign: 'center'}}>
           we strive for transparency{' '}
           <Image source={Anonymous} style={styles.image} /> and don't collect
           {'\n'} excess data.
