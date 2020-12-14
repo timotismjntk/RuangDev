@@ -17,7 +17,7 @@ const AuthorProfile = (props) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const {data, newsId} = props;
+  const {data, postId: newsId} = props;
 
   const viewAuthorProfile = async (authorId) => {
     if (userId === authorId) {
@@ -46,7 +46,7 @@ const AuthorProfile = (props) => {
           <Thumbnail
             source={
               data
-                ? data
+                ? data.avatar
                   ? {uri: API_URL + data.avatar}
                   : {
                       uri: `https://ui-avatars.com/api/?size=50&name=${
