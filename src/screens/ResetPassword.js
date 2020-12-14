@@ -114,6 +114,7 @@ const ResetPassword = (props) => {
                   setShadow('#3B49DF');
                   setBottom(4);
                 }}
+                secureTextEntry={true}
                 placeholder="New password"
                 style={[styles.input, styleCustom]}
               />
@@ -128,6 +129,7 @@ const ResetPassword = (props) => {
                   setShadow('#B5BDC4');
                   setBottom(1);
                 }}
+                secureTextEntry={true}
                 value={prop.values.repeatPassword}
                 onFocus={() => {
                   setShadow('#3B49DF');

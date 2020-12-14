@@ -6,17 +6,43 @@ import {API_URL} from '@env';
 import jwt_decode from 'jwt-decode';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Moment from 'moment';
+import {useNavigation} from '@react-navigation/native';
+
+// import actions
+import getDetailArticleAction from '../redux/actions/getDetailArticle';
 
 const AuthorProfile = (props) => {
   const token = useSelector((state) => state.auth.token);
   const {id: userId} = jwt_decode(token);
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
 
-  const {data} = props;
+  const {data, newsId} = props;
+
+  const viewAuthorProfile = async (authorId) => {
+    if (userId === authorId) {
+      navigation.navigate('UserProfile');
+    } else {
+      try {
+        await dispatch(getDetailArticleAction.getDetailArticles(token, newsId));
+        navigation.navigate('AuthorProfileDetail', {
+          id: authorId,
+        });
+      } catch (e) {
+        console.log(e.message);
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.lineBorder} />
       <View style={styles.authorWrap}>
-        <TouchableOpacity style={styles.imageAuthor}>
+        <TouchableOpacity
+          style={styles.imageAuthor}
+          onPress={() => {
+            viewAuthorProfile(data.id);
+          }}>
           <Thumbnail
             source={
               data

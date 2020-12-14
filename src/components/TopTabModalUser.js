@@ -9,12 +9,25 @@ import {
 } from 'react-native';
 import {BottomSheet} from 'react-native-btr';
 import {useNavigation} from '@react-navigation/native';
+import {persistor} from '../redux/store';
+import SplashScreen from 'react-native-splash-screen';
+
+// import components
+import AlertToasts from '../components/AlertToast';
+import LoadingModal from '../components/LoadingModal';
+
+// import actions
+import authAction from '../redux/actions/auth';
 
 export default function TopTabModalUser(props) {
   const {open, close} = props;
 
   const profile = useSelector((state) => state.profile.data.results);
   const navigation = useNavigation();
+  const [signoutLoading, setSignoutLoading] = useState(false);
+  const [errorToast, setErrorToast] = useState('');
+  const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
 
   const navigateToUserProfile = () => {
     close();
@@ -37,8 +50,29 @@ export default function TopTabModalUser(props) {
     }, 250);
   };
 
+  const signOut = async () => {
+    setSignoutLoading(true);
+    setShow(false);
+    try {
+      setSignoutLoading(false);
+      setErrorToast('Signout now');
+      setShow(true);
+      SplashScreen.hide();
+      setTimeout(async () => {
+        SplashScreen.hide();
+        setShow(false);
+        await persistor.purge();
+        await persistor.purge();
+        await persistor.flush();
+        await dispatch(authAction.logout());
+      }, 1000);
+    } catch (e) {}
+  };
+
   return (
     <View style={styles.container}>
+      <LoadingModal requestLoading={signoutLoading} />
+      <AlertToasts visible={show} message={errorToast} />
       <BottomSheet
         visible={open}
         onBackButtonPress={close}
@@ -65,7 +99,7 @@ export default function TopTabModalUser(props) {
               <Text style={styles.menuText}>Settings</Text>
             </TouchableOpacity>
             <View style={styles.lineBorder} />
-            <TouchableOpacity style={styles.signOut}>
+            <TouchableOpacity style={styles.signOut} onPress={signOut}>
               <Text style={styles.menuText}>Sign Out</Text>
             </TouchableOpacity>
           </View>

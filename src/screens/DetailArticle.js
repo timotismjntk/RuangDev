@@ -21,6 +21,7 @@ import AuthorProfile from '../components/AuthorProfile';
 import Footer from '../components/FooterAfterLogin';
 import {API_URL} from '@env';
 import Moment from 'moment';
+import jwt_decode from 'jwt-decode';
 
 // import actions
 import getDetailArticleAction from '../redux/actions/getDetailArticle';
@@ -43,7 +44,7 @@ const DetailArticle = ({route, navigation}) => {
 
   useEffect(() => {
     if (id) {
-      console.log(id)
+      console.log(id);
       dispatch(getDetailArticleAction.getDetailArticles(token, Number(id)));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -79,12 +80,12 @@ const DetailArticle = ({route, navigation}) => {
           requestLoading={isLoading && !isError ? isLoading : false}
         />
         <View>
-          {data ? (
+          {data && data.newsimage && (
             <Image
               source={{uri: API_URL + data.newsimage}}
               style={styles.image}
             />
-          ) : null}
+          )}
         </View>
         <View style={styles.contentWrapper}>
           <Text style={styles.title}>{data && data.title}</Text>
@@ -173,7 +174,9 @@ const DetailArticle = ({route, navigation}) => {
                 {Moment(data.createdAt).format('LL')}
               </Text>
               <Text style={[styles.text, styles.middot]}>&middot;</Text>
-              <Text style={styles.text}>{data.readEstimated} min read</Text>
+              <Text style={styles.text}>
+                {Math.floor(data.readEstimated)} min read
+              </Text>
               <Text style={[styles.text, styles.middot]}>&middot;</Text>
               <Text style={styles.text}>{data.readCount}x views</Text>
             </View>
@@ -189,7 +192,7 @@ const DetailArticle = ({route, navigation}) => {
         </View> */}
         <View style={styles.lineBorder} />
         <View style={styles.author}>
-          <AuthorProfile data={data.Authors} />
+          <AuthorProfile data={data.Authors} postId={data.id} />
         </View>
         <Footer />
       </ScrollView>

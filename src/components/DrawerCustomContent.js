@@ -42,12 +42,12 @@ const DrawerCustomContent = (props) => {
       setShow(true);
       SplashScreen.hide();
       setTimeout(async () => {
+        SplashScreen.hide();
         setShow(false);
         await persistor.purge();
         await persistor.purge();
         await persistor.flush();
         await dispatch(authAction.logout());
-        SplashScreen.hide();
       }, 1000);
     } catch (e) {}
   };

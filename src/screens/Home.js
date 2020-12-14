@@ -205,7 +205,7 @@ const Home = (props) => {
             </View>
             <View style={styles.estimatedWrap}>
               <Text style={styles.estimatedRead}>
-                {item.readEstimated} min read
+                {Math.floor(item.readEstimated)} min read
               </Text>
             </View>
           </View>
