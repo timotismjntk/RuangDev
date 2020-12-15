@@ -107,8 +107,6 @@ const SendComment = () => {
       postId: id,
       comment: valueText,
     };
-    setValueText('');
-    console.log(data);
     dispatch(commentsActions.postComment(token, data)).catch((e) => {
       console.log(e.message);
     });
@@ -119,6 +117,7 @@ const SendComment = () => {
 
   useEffect(() => {
     if (isSuccess && !isLoading) {
+      setValueText('');
       dispatch(commentsActions.getComments(token, id)).catch((e) => {
         console.log(e.message);
       });

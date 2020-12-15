@@ -28,9 +28,9 @@ import {API_URL} from '@env';
 
 PushNotification.createChannel(
   {
-    channelId: 'dChat',
-    channelName: 'dChat Notification Channel',
-    channelDescription: 'dChatNotification',
+    channelId: 'ruangDev',
+    channelName: 'ruangDev Notification Channel',
+    channelDescription: 'ruangDevNotification',
     soundName: 'default',
     importance: 4,
     vibrate: true,
@@ -47,9 +47,9 @@ const Home = (props) => {
 
   useEffect(() => {
     PushNotification.localNotification({
-      channelId: 'dChat',
+      channelId: 'ruangDev',
       title: 'Hola',
-      message: 'Welcome to dChat',
+      message: 'Welcome to ruangDev',
     });
   }, []);
 

@@ -75,16 +75,16 @@ const CreateNewsArticle = (props) => {
       path: 'images',
     },
   };
-  const createFormDataImage = (props) => {
+  const createFormDataImage = (values) => {
     data.append('picture', {
-      name: props.fileName,
-      type: props.type,
-      uri: props.uri,
+      name: values.fileName,
+      type: values.type,
+      uri: values.uri,
     });
-    if (props.fileSize > 1000000) {
+    if (values.fileSize > 1000000) {
       Alert.alert('image size is too large, atleast < 1000 Kb');
     } else {
-      setItems(props.uri);
+      setItems(values.uri);
     }
   };
 
@@ -125,6 +125,9 @@ const CreateNewsArticle = (props) => {
       setShow(true);
       setTimeout(() => {
         setShow(false);
+        setData(new FormData());
+        setDataTag(new FormData());
+        setTag('');
         dispatch(postNewsAction.clearMessage());
         setLoading(false);
       }, 1000);
@@ -145,7 +148,7 @@ const CreateNewsArticle = (props) => {
         });
         setLoading(false);
         props.navigation.navigate('Home');
-      }, 2500);
+      }, 1500);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, isSuccess]);
@@ -267,7 +270,7 @@ const CreateNewsArticle = (props) => {
             {height: 250 + height2, maxHeight: 500},
           ]}>
           <TextInput
-            placeholder="Write your post content here..."
+            placeholder="Write your post content here...(min 50 characters)"
             multiline={true}
             numberOfLines={20}
             maxLength={2000}
