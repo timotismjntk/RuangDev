@@ -2,10 +2,10 @@ import http from '../../helpers/http';
 import qs from 'qs';
 
 export default {
-  getComments: (token, id, sort = '', page = 1) => {
+  getComments: (token, id, sort = 'DESC', page = 1) => {
     return {
       type: 'GET_COMMENT',
-      payload: http(token).get(`comments/${id}`),
+      payload: http(token).get(`comments/${id}&sort=${sort}`),
     };
   },
   postComment: (token, data) => {

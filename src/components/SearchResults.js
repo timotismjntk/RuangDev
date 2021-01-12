@@ -23,12 +23,12 @@ const SearchResults = (props) => {
   const dispatch = useDispatch();
   const [storeData, setStoreData] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
-
+  const navigation = useNavigation();
   const token = useSelector((state) => state.auth.token);
 
   const detailItems = (itemId) => {
     setTimeout(() => {
-      props.navigation.navigate('detailArticle', {
+      navigation.navigate('detailArticle', {
         id: Number(itemId),
       });
       setSelectedId(null);
@@ -145,7 +145,7 @@ const SearchResults = (props) => {
             </View>
             <View style={styles.estimatedWrap}>
               <Text style={styles.estimatedRead}>
-                {item.readEstimated} min read
+                {Math.floor(item.readEstimated)} min read
               </Text>
             </View>
           </View>
